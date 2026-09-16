@@ -45,7 +45,7 @@
                             </div>
                             <span class="tag {{ $r->is_verified ? 'tag-green' : 'tag-grey' }}">{{ $r->is_verified ? 'Verified' : 'Pending verification' }}</span>
                         </div>
-                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;">
+                        <div class="ar-results-grid" style="display:grid;gap:8px;margin-top:10px;">
                             @foreach(($r->results ?? []) as $subj)
                                 <div style="border:1px solid var(--line);border-radius:8px;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;background:var(--sand-50);font-size:12.5px;">
                                     <span style="color:var(--coffee-700);font-weight:600;">{{ $subj['subject'] ?? '—' }}</span>
@@ -59,7 +59,19 @@
             <a href="{{ route('applicant.application.step', [encId($application->id), $steps->firstWhere('route','academic-results')->route]) }}?add=1" onclick="document.getElementById('new-result').scrollIntoView({behavior:'smooth'}); return false;" class="btn btn-ghost btn-sm" style="align-self:flex-start;">+ Add another result</a>
         </div>
     </div>
-    <style>@media(max-width:900px){ div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important} }@media(max-width:420px){ div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr !important} }</style>
+    <style>
+        .ar-grid{grid-template-columns:repeat(4,1fr)}
+        .subj-row{display:flex;gap:8px;align-items:center}
+        .subj-input{flex:1;min-width:0}
+        .subj-row .subj-grade{flex:none;width:110px}
+        .ar-results-grid{grid-template-columns:repeat(4,1fr)}
+        @media(max-width:1100px){.ar-grid,.ar-results-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:640px){
+            .ar-grid,.ar-results-grid{grid-template-columns:1fr}
+            .subj-row{flex-direction:column;align-items:stretch}
+            .subj-row .subj-grade{width:100%}
+        }
+    </style>
 @endif
 
 <div class="panel" id="new-result">
@@ -75,7 +87,7 @@
             <div id="results-container" style="display:flex;flex-direction:column;gap:18px;">
                 <div class="result-block panel" style="background:var(--sand-50);border:1.5px solid var(--line);box-shadow:none;">
                     <div class="panel-body" style="display:flex;flex-direction:column;gap:14px;">
-                        <div class="form-grid" style="grid-template-columns:repeat(4,1fr);">
+                        <div class="form-grid ar-grid">
                             <div class="field">
                                 <label class="field-label">Exam Type *</label>
                                 <select name="results[0][exam_type]" required>
@@ -102,13 +114,13 @@
                         <div class="field">
                             <label class="field-label">Subjects &amp; Grades *</label>
                             <div class="subjects-list" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
-                                <div style="display:flex;gap:8px;">
-                                    <input name="results[0][subjects][0][subject]" placeholder="e.g. Mathematics" required style="flex:1;">
-                                    <select name="results[0][subjects][0][grade]" required style="width:110px;"><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>
+                                <div class="subj-row">
+                                    <input class="subj-input" name="results[0][subjects][0][subject]" placeholder="e.g. Mathematics" required>
+                                    <select class="subj-grade" name="results[0][subjects][0][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>
                                 </div>
-                                <div style="display:flex;gap:8px;">
-                                    <input name="results[0][subjects][1][subject]" placeholder="e.g. Physics" required style="flex:1;">
-                                    <select name="results[0][subjects][1][grade]" required style="width:110px;"><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>
+                                <div class="subj-row">
+                                    <input class="subj-input" name="results[0][subjects][1][subject]" placeholder="e.g. Physics" required>
+                                    <select class="subj-grade" name="results[0][subjects][1][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>
                                 </div>
                             </div>
                             <button type="button" class="add-subject btn btn-ghost btn-sm" style="margin-top:8px;align-self:flex-start;">+ Add subject</button>
@@ -134,7 +146,7 @@ document.getElementById('add-result')?.addEventListener('click', () => {
     const block = container.firstElementChild.cloneNode(true);
     block.querySelectorAll('[name]').forEach(el => { el.name = el.name.replace('results[0]', `results[${resultIndex}]`); el.value = el.tagName === 'SELECT' ? el.options[0].value : ''; });
     block.querySelectorAll('.subjects-list').forEach(list => {
-        list.innerHTML = `<div style="display:flex;gap:8px;"><input name="results[${resultIndex}][subjects][0][subject]" placeholder="Subject" required style="flex:1;"><select name="results[${resultIndex}][subjects][0][grade]" required style="width:110px;"><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select></div>`;
+        list.innerHTML = `<div class="subj-row"><input class="subj-input" name="results[${resultIndex}][subjects][0][subject]" placeholder="Subject" required><select class="subj-grade" name="results[${resultIndex}][subjects][0][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select></div>`;
     });
     container.appendChild(block);
     resultIndex++;
@@ -145,8 +157,8 @@ document.addEventListener('click', (e) => {
     const idx = list.closest('.result-block').querySelector('[name*="[exam_type]"]').name.match(/results\[(\d+)\]/)[1];
     const count = list.children.length;
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;gap:8px;';
-    row.innerHTML = `<input name="results[${idx}][subjects][${count}][subject]" placeholder="Subject" required style="flex:1;"><select name="results[${idx}][subjects][${count}][grade]" required style="width:110px;"><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>`;
+    row.className = 'subj-row';
+    row.innerHTML = `<input class="subj-input" name="results[${idx}][subjects][${count}][subject]" placeholder="Subject" required><select class="subj-grade" name="results[${idx}][subjects][${count}][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>`;
     list.appendChild(row);
 });
 </script>
