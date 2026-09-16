@@ -2,107 +2,106 @@
 @section('title','Create Account')
 @section('content')
 <div style="max-width:1100px;margin:0 auto;padding:28px 24px 40px">
-    <div style="text-align:center;margin-bottom:22px;">
-        <div style="font-size:20px;font-weight:800;color:var(--coffee-900);">Create your admission account</div>
-        <div style="font-size:13px;color:var(--ink-soft);margin-top:4px;">Complete all four sections below — your official name is pulled from NECTA using your Form Four index number.</div>
-    </div>
-
-    <form method="POST" action="{{ route('register') }}" id="reg-form">
-        @csrf
-        <div class="reg-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;">
-
-            {{-- 1. Study level & entry --}}
-            <div class="panel reg-step" data-step="1">
-                <div class="panel-head"><div class="panel-title" style="font-size:14px;">1. Study Level &amp; Entry</div></div>
-                <div class="panel-body">
-                    <div class="field @error('intended_level_id') err @enderror">
-                        <label class="field-label">Level I want to study *</label>
-                        <select name="intended_level_id" required>
-                            <option value="">— Select level —</option>
-                            @foreach(($levels ?? []) as $lv)
-                                <option value="{{ $lv->id }}" @selected(old('intended_level_id')==$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
-                            @endforeach
-                        </select>
-                        <span class="field-hint">Certificate → PhD</span>
-                        @error('intended_level_id')<span class="field-err">{{ $message }}</span>@enderror
-                    </div>
-                    <div class="field @error('application_type') err @enderror" style="margin-top:14px;">
-                        <label class="field-label">Entry Type / Application Type *</label>
-                        <select name="application_type" required>
-                            <option value="">— Select entry type —</option>
-                            @foreach([['direct','Direct Entry — Form Four (CSEE)'],['equivalent','Equivalent Qualification'],['transfer','Transfer'],['mature_age','Mature Age Entry'],['other','Other']] as [$val,$lab])
-                                <option value="{{ $val }}" @selected(old('application_type')==$val)>{{ $lab }}</option>
-                            @endforeach
-                        </select>
-                        @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
-                    </div>
-                    <div class="field @error('index_number') err @enderror" style="margin-top:14px;">
-                        <label class="field-label">Form Four / Equivalent Index No. *</label>
-                        <input name="index_number" value="{{ old('index_number') }}" required placeholder="S0001-0001-2024, P0001-0001-2024, or EQ2024000028-2024" style="font-family:'Consolas',monospace;letter-spacing:.02em;">
-                        <span class="field-hint">Used by NECTA to fetch your official name</span>
-                        @error('index_number')<span class="field-err">{{ $message }}</span>@enderror
-                    </div>
-                </div>
+    <div class="panel">
+        <div class="panel-head">
+            <div>
+                <div class="panel-title">Create your admission account</div>
+                <div class="panel-sub">Complete all sections below — your official name is pulled from NECTA using your Form Four index number.</div>
             </div>
-
-            {{-- 2. NECTA name check --}}
-            <div class="panel reg-step" data-step="2">
-                <div class="panel-head"><div class="panel-title" style="font-size:14px;">2. NECTA Name Check</div></div>
-                <div class="panel-body">
-                    <div class="field @error('first_name') err @enderror">
-                        <label class="field-label">First Name (Required for NECTA fetch) *</label>
-                        <input name="first_name" id="reg-first-name" value="{{ old('first_name') }}" required placeholder="Please enter your first name">
-                        @error('first_name')<span class="field-err">{{ $message }}</span>@enderror
-                    </div>
-                    <div id="reg-verify-result" style="display:none;margin-top:14px;padding:10px 12px;border-radius:8px;background:#ecfdf3;border:1px solid #abefc6;color:#067647;font-size:13px;">
-                        ✓ Verified with NECTA — <b id="reg-full-name"></b>
-                    </div>
-                    <div id="reg-verify-err" style="display:none;color:#b42318;background:#fef3f2;border:1px solid #fecdca;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-top:12px;"></div>
-                    <button type="button" class="btn btn-soft" style="width:100%;margin-top:16px;" id="reg-verify-btn" onclick="verifyWithNecta()">Verify &amp; Fetch Name from NECTA</button>
-                </div>
-            </div>
-
-            {{-- 3. Contact details --}}
-            <div class="panel reg-step" data-step="3">
-                <div class="panel-head"><div class="panel-title" style="font-size:14px;">3. Contact Details</div></div>
-                <div class="panel-body">
-                    <div class="field @error('phone') err @enderror">
-                        <label class="field-label">Phone Number *</label>
-                        <input name="phone" value="{{ old('phone') }}" required placeholder="+255715000001">
-                        <span class="field-hint">e.g. +255715000001 — include country code</span>
-                        @error('phone')<span class="field-err">{{ $message }}</span>@enderror
-                    </div>
-                    <div class="field @error('email') err @enderror" style="margin-top:14px;">
-                        <label class="field-label">Email Address *</label>
-                        <input name="email" type="email" value="{{ old('email') }}" required placeholder="you@example.com">
-                        <span class="field-hint">Enter a valid / working email</span>
-                        @error('email')<span class="field-err">{{ $message }}</span>@enderror
-                    </div>
-                </div>
-            </div>
-
-            {{-- 4. Password --}}
-            <div class="panel reg-step" data-step="4">
-                <div class="panel-head"><div class="panel-title" style="font-size:14px;">4. Set Password</div></div>
-                <div class="panel-body">
-                    <div class="field @error('password') err @enderror">
-                        <label class="field-label">Password *</label>
-                        <input name="password" type="password" required placeholder="••••••••">
-                        @error('password')<span class="field-err">{{ $message }}</span>@enderror
-                    </div>
-                    <div class="field" style="margin-top:14px;">
-                        <label class="field-label">Confirm Password *</label>
-                        <input name="password_confirmation" type="password" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:18px;">Create Account</button>
-                </div>
-            </div>
-
         </div>
+        <div class="panel-body">
+            <form method="POST" action="{{ route('register') }}" id="reg-form">
+                @csrf
+                <div class="reg-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
 
-        <p style="font-size:13px;text-align:center;margin-top:16px;color:var(--ink-soft);">Already have an account? <a href="{{ route('login') }}" style="color:var(--terracotta-600);font-weight:700;">Sign in</a></p>
-        <p style="text-align:center;margin-top:8px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
-    </form>
+                    {{-- 1. Study level & entry --}}
+                    <div class="reg-step" data-step="1">
+                        <div style="font-weight:800;font-size:14px;color:var(--coffee-900);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--line);">1. Study Level &amp; Entry</div>
+                        <div class="field @error('intended_level_id') err @enderror">
+                            <label class="field-label">Level I want to study *</label>
+                            <select name="intended_level_id" required>
+                                <option value="">— Select level —</option>
+                                @foreach(($levels ?? []) as $lv)
+                                    <option value="{{ $lv->id }}" @selected(old('intended_level_id')==$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
+                                @endforeach
+                            </select>
+                            <span class="field-hint">Certificate → PhD</span>
+                            @error('intended_level_id')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field @error('application_type') err @enderror" style="margin-top:14px;">
+                            <label class="field-label">Entry Type / Application Type *</label>
+                            <select name="application_type" required>
+                                <option value="">— Select entry type —</option>
+                                @foreach([['direct','Direct Entry — Form Four (CSEE)'],['equivalent','Equivalent Qualification'],['transfer','Transfer'],['mature_age','Mature Age Entry'],['other','Other']] as [$val,$lab])
+                                    <option value="{{ $val }}" @selected(old('application_type')==$val)>{{ $lab }}</option>
+                                @endforeach
+                            </select>
+                            @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field @error('index_number') err @enderror" style="margin-top:14px;">
+                            <label class="field-label">Form Four / Equivalent Index No. *</label>
+                            <input name="index_number" value="{{ old('index_number') }}" required placeholder="S0001-0001-2024, P0001-0001-2024, or EQ2024000028-2024" style="font-family:'Consolas',monospace;letter-spacing:.02em;">
+                            <span class="field-hint">Used by NECTA to fetch your official name</span>
+                            @error('index_number')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
+                    {{-- 2. NECTA name check --}}
+                    <div class="reg-step" data-step="2">
+                        <div style="font-weight:800;font-size:14px;color:var(--coffee-900);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--line);">2. NECTA Name Check</div>
+                        <div class="field @error('first_name') err @enderror">
+                            <label class="field-label">First Name (Required for NECTA fetch) *</label>
+                            <input name="first_name" id="reg-first-name" value="{{ old('first_name') }}" required placeholder="Please enter your first name">
+                            @error('first_name')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div id="reg-verify-result" style="display:none;margin-top:14px;padding:10px 12px;border-radius:8px;background:#ecfdf3;border:1px solid #abefc6;color:#067647;font-size:13px;">
+                            ✓ Verified with NECTA — <b id="reg-full-name"></b>
+                        </div>
+                        <div id="reg-verify-err" style="display:none;color:#b42318;background:#fef3f2;border:1px solid #fecdca;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-top:12px;"></div>
+                        <button type="button" class="btn btn-soft" style="width:100%;margin-top:16px;" id="reg-verify-btn" onclick="verifyWithNecta()">Verify &amp; Fetch Name from NECTA</button>
+                    </div>
+
+                    {{-- 3. Contact details --}}
+                    <div class="reg-step" data-step="3">
+                        <div style="font-weight:800;font-size:14px;color:var(--coffee-900);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--line);">3. Contact Details</div>
+                        <div class="field @error('phone') err @enderror">
+                            <label class="field-label">Phone Number *</label>
+                            <input name="phone" value="{{ old('phone') }}" required placeholder="+255715000001">
+                            <span class="field-hint">e.g. +255715000001 — include country code</span>
+                            @error('phone')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field @error('email') err @enderror" style="margin-top:14px;">
+                            <label class="field-label">Email Address *</label>
+                            <input name="email" type="email" value="{{ old('email') }}" required placeholder="you@example.com">
+                            <span class="field-hint">Enter a valid / working email</span>
+                            @error('email')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
+                    {{-- 4. Password --}}
+                    <div class="reg-step" data-step="4">
+                        <div style="font-weight:800;font-size:14px;color:var(--coffee-900);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--line);">4. Set Password</div>
+                        <div class="field @error('password') err @enderror">
+                            <label class="field-label">Password *</label>
+                            <input name="password" type="password" required placeholder="••••••••">
+                            @error('password')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field" style="margin-top:14px;">
+                            <label class="field-label">Confirm Password *</label>
+                            <input name="password_confirmation" type="password" required placeholder="••••••••">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);">
+                    <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Create Account</button>
+                </div>
+
+                <p style="font-size:13px;text-align:center;margin-top:14px;color:var(--ink-soft);">Already have an account? <a href="{{ route('login') }}" style="color:var(--terracotta-600);font-weight:700;">Sign in</a></p>
+                <p style="text-align:center;margin-top:8px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div class="modal-backdrop" id="regAlertBackdrop" onclick="if(event.target===this)closeModal('regAlertBackdrop')">
