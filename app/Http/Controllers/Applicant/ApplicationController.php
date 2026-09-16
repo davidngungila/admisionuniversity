@@ -106,7 +106,6 @@ class ApplicationController extends Controller
             'email'       => $user->email,
             'exam_index_number' => session('reg_index_number'),
             'application_type'  => session('reg_application_type'),
-            'olevel_completion_date' => session('reg_olevel_completion_date'),
         ]);
     }
 

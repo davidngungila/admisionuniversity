@@ -60,7 +60,6 @@ class AuthController extends Controller
             'citizenship_id'      => ['nullable', 'exists:countries,id'],
             'intended_level_id'   => ['required', 'exists:admission_levels,id'],
             'application_type'    => ['required', 'string', 'max:40'],
-            'olevel_completion_date' => ['required', 'date'],
             'index_number'        => ['required', 'string', 'max:40'],
             'first_name'          => ['required', 'string', 'min:2', 'max:255'],
         ]);
@@ -107,7 +106,6 @@ class AuthController extends Controller
             'reg_index_number'        => $validated['index_number'],
             'reg_first_name'          => $validated['first_name'],
             'reg_application_type'    => $validated['application_type'],
-            'reg_olevel_completion_date' => $validated['olevel_completion_date'],
             'reg_verified_full_name'  => $fullName,
         ]);
 

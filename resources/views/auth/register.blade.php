@@ -63,11 +63,6 @@
                             </select>
                             @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
-                        <div class="field @error('olevel_completion_date') err @enderror" style="margin-top:14px;">
-                            <label class="field-label">O'Level (CSEE) Completion Date *</label>
-                            <input name="olevel_completion_date" type="date" value="{{ old('olevel_completion_date') }}" max="{{ date('Y-m-d') }}" required>
-                            @error('olevel_completion_date')<span class="field-err">{{ $message }}</span>@enderror
-                        </div>
                         <div class="field @error('index_number') err @enderror" style="margin-top:14px;">
                             <label class="field-label">Form Four / Equivalent Index No. *</label>
                             <input name="index_number" value="{{ old('index_number') }}" required placeholder="S0001-0001-2024, P0001-0001-2024, or EQ2024000028-2024" style="font-family:'Consolas',monospace;letter-spacing:.02em;">
@@ -131,6 +126,21 @@
     </div>
 </div>
 
+<div class="modal-backdrop" id="regAlertBackdrop" onclick="if(event.target===this)closeModal('regAlertBackdrop')">
+    <div class="modal modal-sm">
+        <div class="modal-body" style="text-align:center;padding:28px 22px 18px">
+            <div class="es-icon" style="background:var(--terracotta-100);border-color:#e8b4b0;color:var(--terracotta-600);margin-bottom:14px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <h3 style="font-size:15px;font-weight:800;color:var(--coffee-900)">Please check</h3>
+            <p id="regAlertMsg" style="font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.5"></p>
+        </div>
+        <div class="modal-foot" style="justify-content:center">
+            <button type="button" class="btn btn-primary btn-sm" onclick="closeModal('regAlertBackdrop')">OK</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 const FETCH_NAME_ROUTE = "{{ route('register.fetch-name') }}";
@@ -148,23 +158,26 @@ function showStep(n) {
     });
 }
 function req(field) { return (field.value || '').trim(); }
+function regAlert(msg) {
+    document.getElementById('regAlertMsg').textContent = msg;
+    openModal('regAlertBackdrop');
+}
 function nextStep(n) {
     const f = document.getElementById('reg-form');
     if (n === 1) {
-        const lvl = req(f.intended_level_id), at = req(f.application_type), od = req(f.olevel_completion_date), ix = req(f.index_number);
-        if (!lvl) return alert('Please select the level you want to study.');
-        if (!at) return alert('Please choose your entry / application type.');
-        if (!od) return alert('Enter your O\'Level (CSEE) completion date.');
-        if (!ix) return alert('Enter your Form Four / Equivalent index number.');
-        if (!/^(S\d{4}-\d{4}-\d{4}|P\d{4}-\d{4}-\d{4}|EQ\d{10}-\d{4})$/i.test(ix)) return alert('Index number format should be e.g. S0001-0001-2024, P0001-0001-2024 or EQ2024000028-2024.');
+        const lvl = req(f.intended_level_id), at = req(f.application_type), ix = req(f.index_number);
+        if (!lvl) return regAlert('Please select the level you want to study.');
+        if (!at) return regAlert('Please choose your entry / application type.');
+        if (!ix) return regAlert('Enter your Form Four / Equivalent index number.');
+        if (!/^(S\d{4}-\d{4}-\d{4}|P\d{4}-\d{4}-\d{4}|EQ\d{10}-\d{4})$/i.test(ix)) return regAlert('Index number format should be e.g. S0001-0001-2024, P0001-0001-2024 or EQ2024000028-2024.');
     } else if (n === 2) {
-        if (!verifiedName) return alert('Please verify your name with NECTA first.');
+        if (!verifiedName) return regAlert('Please verify your name with NECTA first.');
     } else if (n === 3) {
         const ph = req(f.phone), em = req(f.email);
-        if (!ph) return alert('Enter your phone number.');
-        if (!/^\+?[0-9]{9,15}$/.test(ph)) return alert('Enter a valid phone number, e.g. +255715000001.');
-        if (!em) return alert('Enter your email address.');
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return alert('Enter a valid / working email address.');
+        if (!ph) return regAlert('Enter your phone number.');
+        if (!/^\+?[0-9]{9,15}$/.test(ph)) return regAlert('Enter a valid phone number, e.g. +255715000001.');
+        if (!em) return regAlert('Enter your email address.');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return regAlert('Enter a valid / working email address.');
     }
     showStep(n + 1);
 }
@@ -177,8 +190,8 @@ async function verifyWithNecta() {
     const resEl = document.getElementById('reg-verify-result');
     errEl.style.display = 'none'; resEl.style.display = 'none';
 
-    if (!index) return alert('Enter your Form Four / Equivalent index number first (Step 1).');
-    if (!firstName) return alert('Please enter your first name.');
+    if (!index) return regAlert('Enter your Form Four / Equivalent index number first (Step 1).');
+    if (!firstName) return regAlert('Please enter your first name.');
 
     const btn = document.getElementById('reg-verify-btn');
     const original = btn.textContent;
