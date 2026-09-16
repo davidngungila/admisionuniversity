@@ -48,8 +48,9 @@ Route::get('/verify-admission', [PublicController::class, 'verify'])->name('publ
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register/fetch-name', [AuthController::class, 'fetchName'])->name('register.fetch-name');
 });
 
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -63,9 +64,10 @@ Route::middleware(['auth', 'active'])->prefix('applicant')->name('applicant.')->
     Route::post('/apply/{window}', [ApplicantApplication::class, 'start'])->name('application.start');
 
     // Application workflow (dynamic steps)
-    Route::get('/applications/{application}', [ApplicantApplication::class, 'show'])->name('application.show');
+Route::get('/applications/{application}', [ApplicantApplication::class, 'show'])->name('application.show');
     Route::get('/applications/{application}/step/{route}', [ApplicantApplication::class, 'step'])->name('application.step');
     Route::post('/applications/{application}/step/{route}', [ApplicantApplication::class, 'save'])->name('application.save');
+    Route::post('/applications/{application}/results/fetch', [ApplicantApplication::class, 'fetchResult'])->name('application.results.fetch');
 
     // Status / summary / history
     Route::get('/applications/{application}/status', [ApplicantStatus::class, 'show'])->name('application.status');

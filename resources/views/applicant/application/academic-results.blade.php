@@ -81,49 +81,54 @@
             <div class="panel-sub">You can add multiple exam sittings. Each must have at least one subject + grade.</div>
         </div>
     </div>
-    <div class="panel-body">
-        <form method="POST" action="{{ route('applicant.application.save', [encId($application->id), $currentStep->route]) }}" style="display:flex;flex-direction:column;gap:18px;" onsubmit="event.preventDefault(); const _f=this; confirmModal('Save academic results','Are you sure you want to save these academic results and continue?',()=>_f.submit())">
+<div class="panel-body">
+        <form method="POST" action="{{ route('applicant.application.save', [encId($application->id), $currentStep->route]) }}" style="display:flex;flex-direction:column;gap:18px;" onsubmit="event.preventDefault(); if(!validateAcademicForm(this)) return; confirmModal('Save academic results','Are you sure you want to save these academic results and continue?',()=>this.submit())">
             @csrf
             <div id="results-container" style="display:flex;flex-direction:column;gap:18px;">
                 <div class="result-block panel" style="background:var(--sand-50);border:1.5px solid var(--line);box-shadow:none;">
                     <div class="panel-body" style="display:flex;flex-direction:column;gap:14px;">
+                        <input type="hidden" class="ar-exam-body" name="results[0][exam_body]" value="">
+                        <input type="hidden" class="ar-verified" name="results[0][is_verified]" value="0">
+
                         <div class="form-grid ar-grid">
                             <div class="field">
                                 <label class="field-label">Exam Type *</label>
-                                <select name="results[0][exam_type]" required>
+                                <select name="results[0][exam_type]" class="ar-exam-type" required onchange="applyExamTypeUI(this.closest('.result-block'))">
                                     <option value="O-Level" selected>O-Level</option>
                                     <option value="A-Level">A-Level</option>
-                                    <option value="Diploma">Diploma</option>
                                     <option value="Certificate">Certificate</option>
-                                    <option value="Bachelor">Bachelor</option>
+                                    <option value="Diploma">Diploma</option>
                                 </select>
                             </div>
-                            <div class="field">
-                                <label class="field-label">Index Number *</label>
-                                <input name="results[0][index_number]" required placeholder="S0xxx/xxxx">
+                            <div class="field ar-identifier-field">
+                                <label class="field-label ar-identifier-label">Index Number *</label>
+                                <input name="results[0][index_number]" class="ar-identifier" required placeholder="e.g. S0105/0013/2023">
+                            </div>
+                            <div class="field ar-year-field">
+                                <label class="field-label ar-year-label">Year *</label>
+                                <input name="results[0][exam_year]" class="ar-year" type="number" min="1980" max="{{ date('Y')+1 }}" value="{{ date('Y')-1 }}" required>
                             </div>
                             <div class="field">
-                                <label class="field-label">Year *</label>
-                                <input name="results[0][exam_year]" type="number" min="1980" max="{{ date('Y')+1 }}" value="{{ date('Y')-1 }}" required>
-                            </div>
-                            <div class="field">
-                                <label class="field-label">School</label>
-                                <input name="results[0][school_name]" placeholder="School name">
+                                <label class="field-label">School / Institution</label>
+                                <input name="results[0][school_name]" class="ar-school" placeholder="School or institution name">
                             </div>
                         </div>
+
                         <div class="field">
-                            <label class="field-label">Subjects &amp; Grades *</label>
-                            <div class="subjects-list" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
-                                <div class="subj-row">
-                                    <input class="subj-input" name="results[0][subjects][0][subject]" placeholder="e.g. Mathematics" required>
-                                    <select class="subj-grade" name="results[0][subjects][0][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>
-                                </div>
-                                <div class="subj-row">
-                                    <input class="subj-input" name="results[0][subjects][1][subject]" placeholder="e.g. Physics" required>
-                                    <select class="subj-grade" name="results[0][subjects][1][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>
-                                </div>
+                            <div class="field-label" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">Subjects &amp; Grades *
+                                <span class="tag tag-green ar-verified-tag" style="display:none;">✓ Verified by <span class="ar-provider-name"></span></span>
                             </div>
-                            <button type="button" class="add-subject btn btn-ghost btn-sm" style="margin-top:8px;align-self:flex-start;">+ Add subject</button>
+                            <div class="subjects-list" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+                                <div class="ar-placeholder" style="border:1px dashed var(--line);border-radius:8px;padding:10px 12px;background:#fff;font-size:12.5px;color:var(--coffee-600);">Enter your NECTA index number above and click <strong>Fetch from NECTA</strong> to load your official results.</div>
+                            </div>
+                            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                                <button type="button" class="btn btn-primary btn-sm ar-fetch-btn" onclick="fetchOfficialResult(this.closest('.result-block'))">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span class="ar-fetch-label">Fetch from NECTA</span>
+                                </button>
+                                <button type="button" class="btn btn-ghost btn-sm ar-change-btn" style="display:none;" onclick="resetBlockVerified(this.closest('.result-block'))">Change details</button>
+                            </div>
+                            <div class="ar-err" style="display:none;color:#b42318;background:#fef3f2;border:1px solid #fecdca;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-top:10px;"></div>
                         </div>
                     </div>
                 </div>
@@ -140,26 +145,152 @@
 </div>
 
 <script>
+const FETCH_ROUTE = "{{ route('applicant.application.results.fetch', encId($application->id)) }}";
+const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+const EXAM_META = {
+    'O-Level': { label: 'Index Number', placeholder: 'e.g. S0105/0013/2023', year: 'Year', fetch: 'Fetch from NECTA', provider: 'NECTA', hint: 'Enter your NECTA index number above and click <strong>Fetch from NECTA</strong> to load your official results.' },
+    'A-Level': { label: 'Index Number', placeholder: 'e.g. S0105/0013/2023', year: 'Year', fetch: 'Fetch from NECTA', provider: 'NECTA', hint: 'Enter your NECTA index number above and click <strong>Fetch from NECTA</strong> to load your official results.' },
+    'Certificate': { label: 'Registration Number', placeholder: 'e.g. FT/2023/000123', year: 'Year of Graduation', fetch: 'Fetch from NACTVET', provider: 'NACTVET', hint: 'Enter your NACTVET registration number and year of graduation above, then click <strong>Fetch from NACTVET</strong>.' },
+    'Diploma': { label: 'AVN Number', placeholder: 'e.g. AVN/2020/000456', year: null, fetch: 'Fetch from NACTVET', provider: 'NACTVET', hint: 'Enter your AVN number above, then click <strong>Fetch from NACTVET</strong> to load your results.' }
+};
+
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+}
+function blockIndex(block) {
+    const m = block.querySelector('[name*="[exam_type]"]').name.match(/results\[(\d+)\]/);
+    return m ? m[1] : '0';
+}
+function showError(el, msg) { el.textContent = msg; el.style.display = ''; }
+
+function applyExamTypeUI(block) {
+    const meta = EXAM_META[block.querySelector('.ar-exam-type').value] || EXAM_META['O-Level'];
+    block.querySelector('.ar-identifier-label').textContent = meta.label + ' *';
+    block.querySelector('.ar-identifier').placeholder = meta.placeholder;
+    const yf = block.querySelector('.ar-year-field');
+    if (meta.year) {
+        yf.style.display = '';
+        block.querySelector('.ar-year-label').textContent = meta.year + ' *';
+        block.querySelector('.ar-year').required = true;
+    } else {
+        yf.style.display = 'none';
+        block.querySelector('.ar-year').required = false;
+    }
+    block.querySelector('.ar-fetch-label').textContent = meta.fetch;
+    block.querySelector('.subjects-list').innerHTML = '<div class="ar-placeholder" style="border:1px dashed var(--line);border-radius:8px;padding:10px 12px;background:#fff;font-size:12.5px;color:var(--coffee-600);">' + meta.hint + '</div>';
+    const err = block.querySelector('.ar-err'); err.style.display = 'none';
+    setBlockFields(block, {});
+    block.querySelector('.ar-change-btn').style.display = 'none';
+}
+
+function setBlockFields(block, data) {
+    block.querySelector('.ar-exam-body').value = data.provider || '';
+    block.querySelector('.ar-verified').value = data.verified ? '1' : '0';
+    if (data.provider) block.querySelector('.ar-provider-name').textContent = data.provider;
+    block.querySelector('.ar-verified-tag').style.display = data.verified ? '' : 'none';
+    block.querySelector('.ar-fetch-btn').disabled = !!data.verified;
+    if (data.verified) block.querySelector('.ar-fetch-label').textContent = 'Fetched ✓';
+    block.querySelector('.ar-exam-type').disabled = !!data.verified;
+    block.querySelector('.ar-identifier').readOnly = !!data.verified;
+    block.querySelector('.ar-year').readOnly = !!data.verified;
+}
+
+async function fetchOfficialResult(block) {
+    const err = block.querySelector('.ar-err');
+    err.style.display = 'none';
+
+    const type = block.querySelector('.ar-exam-type').value;
+    const identifier = block.querySelector('.ar-identifier').value.trim();
+    const year = block.querySelector('.ar-year').value.trim();
+    const meta = EXAM_META[type];
+
+    const payload = { exam_type: type };
+    if (type === 'Certificate') {
+        payload.registration_number = identifier;
+        payload.exam_year = year ? parseInt(year, 10) : null;
+    } else if (type === 'Diploma') {
+        payload.avn_number = identifier;
+    } else {
+        payload.index_number = identifier;
+        payload.exam_year = year ? parseInt(year, 10) : null;
+    }
+
+    const btn = block.querySelector('.ar-fetch-btn');
+    const lab = btn.querySelector('.ar-fetch-label');
+    const original = lab.textContent;
+    btn.disabled = true; lab.textContent = 'Fetching…';
+
+    try {
+        const res = await fetch(FETCH_ROUTE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+            showError(err, data.error || 'Could not fetch results. Please check the details and try again.');
+            btn.disabled = false; lab.textContent = original;
+            return;
+        }
+
+        const list = block.querySelector('.subjects-list');
+        const idx = blockIndex(block);
+        list.innerHTML = '';
+        data.subjects.forEach((s, n) => {
+            const row = document.createElement('div');
+            row.className = 'subj-row';
+            row.innerHTML = '<input class="subj-input" name="results[' + idx + '][subjects][' + n + '][subject]" value="' + esc(s.subject) + '" readonly>'
+                + '<span class="tag tag-green" style="flex:none;">' + esc(s.grade) + '</span>'
+                + '<input type="hidden" name="results[' + idx + '][subjects][' + n + '][grade]" value="' + esc(s.grade) + '">';
+            list.appendChild(row);
+        });
+
+        if (data.identifier) block.querySelector('.ar-identifier').value = data.identifier;
+        if (data.exam_year) block.querySelector('.ar-year').value = data.exam_year;
+        if (data.school_name) block.querySelector('.ar-school').value = data.school_name;
+
+        setBlockFields(block, { provider: data.provider, verified: true });
+        block.querySelector('.ar-change-btn').style.display = '';
+        block.querySelector('.ar-change-btn').textContent = meta.provider === 'NECTA' ? 'Change index number' : 'Change details';
+    } catch (e) {
+        showError(err, 'Network error. Please check your connection and try again.');
+        btn.disabled = false; lab.textContent = original;
+    }
+}
+
+function resetBlockVerified(block) {
+    block.querySelectorAll('[readonly]').forEach(el => el.readOnly = false);
+    block.querySelector('.ar-exam-type').disabled = false;
+    block.querySelector('.ar-exam-body').value = '';
+    block.querySelector('.ar-verified').value = '0';
+    applyExamTypeUI(block);
+}
+
+function validateAcademicForm(form) {
+    const missing = [];
+    form.querySelectorAll('.result-block').forEach(block => {
+        if (block.querySelector('.ar-verified').value !== '1') {
+            missing.push(+blockIndex(block) + 1);
+        }
+    });
+    if (missing.length) {
+        alert('Every exam sitting must be verified from the official source (NECTA / NACTVET). Please fetch results for sitting(s): ' + missing.join(', '));
+        return false;
+    }
+    return true;
+}
+
 let resultIndex = 1;
 document.getElementById('add-result')?.addEventListener('click', () => {
     const container = document.getElementById('results-container');
     const block = container.firstElementChild.cloneNode(true);
     block.querySelectorAll('[name]').forEach(el => { el.name = el.name.replace('results[0]', `results[${resultIndex}]`); el.value = el.tagName === 'SELECT' ? el.options[0].value : ''; });
-    block.querySelectorAll('.subjects-list').forEach(list => {
-        list.innerHTML = `<div class="subj-row"><input class="subj-input" name="results[${resultIndex}][subjects][0][subject]" placeholder="Subject" required><select class="subj-grade" name="results[${resultIndex}][subjects][0][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select></div>`;
-    });
+    applyExamTypeUI(block);
     container.appendChild(block);
     resultIndex++;
 });
-document.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('add-subject')) return;
-    const list = e.target.previousElementSibling;
-    const idx = list.closest('.result-block').querySelector('[name*="[exam_type]"]').name.match(/results\[(\d+)\]/)[1];
-    const count = list.children.length;
-    const row = document.createElement('div');
-    row.className = 'subj-row';
-    row.innerHTML = `<input class="subj-input" name="results[${idx}][subjects][${count}][subject]" placeholder="Subject" required><select class="subj-grade" name="results[${idx}][subjects][${count}][grade]" required><option value="A">A</option><option value="B">B</option><option value="C" selected>C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select>`;
-    list.appendChild(row);
-});
+
+document.querySelectorAll('.result-block').forEach(applyExamTypeUI);
 </script>
 @endsection

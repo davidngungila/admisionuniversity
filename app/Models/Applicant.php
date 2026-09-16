@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'phone',
     'email',
     'exam_index_number',
+    'application_type',
+    'olevel_completion_date',
     'disability_status',
     'disability_type',
     'nida_number',
@@ -34,6 +36,7 @@ class Applicant extends Model
     {
         return [
             'date_of_birth' => 'date',
+            'olevel_completion_date' => 'date',
             'disability_status' => 'boolean',
         ];
     }

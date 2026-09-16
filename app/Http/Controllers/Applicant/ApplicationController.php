@@ -104,6 +104,9 @@ class ApplicationController extends Controller
             'last_name'   => $parts[2] ?? ($parts[1] ?? ''),
             'phone'       => $user->phone,
             'email'       => $user->email,
+            'exam_index_number' => session('reg_index_number'),
+            'application_type'  => session('reg_application_type'),
+            'olevel_completion_date' => session('reg_olevel_completion_date'),
         ]);
     }
 
@@ -432,8 +435,10 @@ class ApplicationController extends Controller
         $validated = $request->validate([
             'results' => ['required', 'array', 'min:1'],
             'results.*.exam_type'   => ['required', 'string', 'max:40'],
+            'results.*.exam_body'   => ['required', 'string', 'max:80'],
+            'results.*.is_verified' => ['required', 'boolean'],
             'results.*.index_number'=> ['required', 'string', 'max:40'],
-            'results.*.exam_year'   => ['required', 'integer', 'min:1980', 'max:'.(date('Y') + 1)],
+            'results.*.exam_year'   => ['nullable', 'integer', 'min:1980', 'max:'.(date('Y') + 1)],
             'results.*.school_name' => ['nullable', 'string', 'max:191'],
             'results.*.subjects'    => ['required', 'array', 'min:1'],
             'results.*.subjects.*.subject' => ['required', 'string', 'max:191'],
@@ -449,13 +454,16 @@ class ApplicationController extends Controller
                 AcademicResult::create([
                     'application_id'  => $application->id,
                     'exam_type'       => $item['exam_type'],
+                    'exam_body'       => $item['exam_body'] ?? null,
                     'index_number'    => $item['index_number'],
-                    'exam_year'       => $item['exam_year'],
+                    'exam_year'       => $item['exam_year'] ?? null,
                     'school_name'     => $item['school_name'] ?? null,
                     'results'         => $item['subjects'],
                     'total_subjects'  => count($item['subjects']),
                     'passes_count'    => $passes,
                     'overall_grade'   => $this->overallGrade($item['subjects']),
+                    'is_verified'     => $item['is_verified'] ?? false,
+                    'verified_at'     => ! empty($item['is_verified']) ? now() : null,
                 ]);
             }
         });
@@ -463,6 +471,46 @@ class ApplicationController extends Controller
         $this->markCompleted($application, $step);
 
         return $this->redirectToNextStep($application);
+    }
+
+    public function fetchResult(Request $request, Application $application)
+    {
+        $this->authorizeApplication($application);
+
+        $validated = $request->validate([
+            'exam_type'    => ['required', 'in:O-Level,A-Level,Certificate,Diploma'],
+            'index_number' => ['nullable', 'string', 'max:40'],
+            'registration_number' => ['nullable', 'string', 'max:40'],
+            'avn_number'   => ['nullable', 'string', 'max:40'],
+            'exam_year'    => ['nullable', 'integer', 'min:1980', 'max:'.(date('Y') + 1)],
+        ]);
+
+        $type = $validated['exam_type'];
+
+        if (in_array($type, ['O-Level', 'A-Level'], true)) {
+            if (empty($validated['index_number'])) {
+                return response()->json(['ok' => false, 'error' => 'Enter your NECTA index number to fetch your results.'], 422);
+            }
+            $payload = ['index_number' => $validated['index_number'], 'exam_year' => $validated['exam_year'] ?? null];
+        } elseif ($type === 'Certificate') {
+            if (empty($validated['registration_number']) || empty($validated['exam_year'])) {
+                return response()->json(['ok' => false, 'error' => 'Enter your NACTVET registration number and year of graduation.'], 422);
+            }
+            $payload = ['registration_number' => $validated['registration_number'], 'exam_year' => $validated['exam_year']];
+        } else {
+            if (empty($validated['avn_number'])) {
+                return response()->json(['ok' => false, 'error' => 'Enter your AVN number to fetch your diploma results.'], 422);
+            }
+            $payload = ['avn_number' => $validated['avn_number']];
+        }
+
+        $result = app(\App\Services\ResultVerificationService::class)->verify($type, $payload);
+
+        if (! $result['ok']) {
+            return response()->json(['ok' => false, 'error' => $result['error']], 422);
+        }
+
+        return response()->json($result);
     }
 
     protected function overallGrade(array $subjects): string
