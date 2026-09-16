@@ -52,7 +52,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // ── Applicant (auth) ────────────────────────────────────────────────
 Route::middleware(['auth', 'active'])->prefix('applicant')->name('applicant.')->group(function () {
