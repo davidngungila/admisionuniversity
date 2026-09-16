@@ -137,12 +137,6 @@
             <div class="sb-label">Session</div>
             <form method="POST" action="{{ route('logout') }}">@csrf<button class="sb-item" style="width:100%;background:none;border:none;font-family:inherit;cursor:pointer;text-align:left;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></button></form>
         </nav>
-        <footer class="sb-footer">
-            <div class="sb-user">
-                <div class="sb-avatar">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
-                <div class="sb-user-text"><strong>{{ auth()->user()->name }}</strong></div>
-            </div>
-        </footer>
     </aside>
 
     <div class="main" id="mainArea">
