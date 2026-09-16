@@ -295,6 +295,76 @@
                 </div>
             </div>
 
+            {{-- Integration tabs: GePG / NECTA / NACTVET / TCU --}}
+            @foreach($integrationTabs as $it)
+            <div id="{{ $it['id'] }}" class="settings-tab-panel" style="display:none;">
+                <div style="padding:20px 24px 0;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $it['icon'] !!}</svg>
+                        <h2 style="margin:0;font-size:17px;font-weight:800;color:var(--coffee-900);">{{ $it['title'] }}</h2>
+                    </div>
+                    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px 26px;">{{ $it['desc'] }}</p>
+                </div>
+                <div style="padding:0 24px 24px;">
+                    <form method="POST" action="{{ route('admin.settings.update') }}" onsubmit="event.preventDefault(); const _f=this; confirmModal('Save {{ $it['title'] }}','Save {{ $it['tab'] }} settings changes?',()=>_f.submit())">
+                    @csrf
+
+                    {{-- Provider status --}}
+                    @php
+                        $enField = collect($it['fields'])->first(fn($f)=>str_ends_with($f['key'],'_enabled'));
+                        $tmField = collect($it['fields'])->first(fn($f)=>str_ends_with($f['key'],'_test_mode'));
+                        $kv = function($k,$def='') use($settings){ $i=$settings->search(fn($x)=>$x->key===$k); return $i!==false ? $settings[$i]->value : $def; };
+                        $enVal = $enField ? $kv($enField['key'],'0') : null;
+                        $tmVal = $tmField ? $kv($tmField['key'],'1') : null;
+                    @endphp
+                    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:18px;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--sand-50);">
+                        <span style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-right:4px;">Status:</span>
+                        @if($enField)
+                            <span class="tag {{ $enVal==='1' ? 'tag-green' : 'tag-red' }}" style="font-size:11px;">{{ $enVal==='1' ? 'Enabled' : 'Disabled' }}</span>
+                        @endif
+                        @if($tmField)
+                            <span class="tag {{ $tmVal==='1' ? 'tag-gold' : 'tag-green' }}" style="font-size:11px;">{{ $tmVal==='1' ? 'TEST / staging' : 'LIVE / production' }}</span>
+                        @endif
+                        <span class="cell-sub" style="font-size:11.5px;margin-left:auto;">Changes apply immediately after saving.</span>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;" class="settings-2col">
+                        @foreach($it['fields'] as $f)
+                            @php
+                                $fIdx = $settings->search(fn($x)=>$x->key===$f['key']);
+                                $fVal = $fIdx !== false ? $settings[$fIdx]->value : ($f['def'] ?? '');
+                                $styleFull = ($f['full'] ?? false) ? 'grid-column:1/-1;' : '';
+                            @endphp
+                            <div class="field" style="{{ $styleFull }}">
+                                <label class="field-label">{{ $f['label'] }}</label>
+                                <input type="hidden" name="settings[{{ $fIdx !== false ? $fIdx : $settings->count() }}][key]" value="{{ $f['key'] }}">
+                                @if(($f['type'] ?? 'text') === 'select')
+                                    <select name="settings[{{ $fIdx !== false ? $fIdx : $settings->count() }}][value]" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;">
+                                        @foreach($f['options'] as $ov=>$ol)
+                                            <option value="{{ $ov }}" @selected((string)$fVal===(string)$ov)>{{ $ol }}</option>
+                                        @endforeach
+                                    </select>
+                                @elseif(($f['type'] ?? 'text') === 'textarea')
+                                    <textarea name="settings[{{ $fIdx !== false ? $fIdx : $settings->count() }}][value]" rows="4" placeholder="{{ $f['placeholder'] ?? '' }}" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:12px;font-family:monospace;background:#fff;resize:vertical;line-height:1.5;">{{ $fVal }}</textarea>
+                                @else
+                                    <input name="settings[{{ $fIdx !== false ? $fIdx : $settings->count() }}][value]" value="{{ $fVal }}" @if(($f['type'] ?? 'text') === 'password') type="password" onfocus="this.type='text'" onblur="if(!this.value)this.type='password'" @endif placeholder="{{ $f['placeholder'] ?? '' }}" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;@if(($f['type'] ?? 'text') === 'password') font-family:monospace;letter-spacing:.04em;@endif background:#fff;">
+                                @endif
+                                @if(!empty($f['hint']))<span class="field-hint">{{ $f['hint'] }}</span>@endif
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div style="display:flex;justify-content:flex-end;margin-top:18px;">
+                        <button class="btn btn-primary" style="min-width:170px;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Save {{ $it['tab'] }} Settings
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+
             {{-- Tab: General --}}
             <div id="tab-general" class="settings-tab-panel" style="display:none;">
                 <div style="padding:20px 24px 0;">
