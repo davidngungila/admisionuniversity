@@ -23,7 +23,7 @@
             <div class="panel-head">
                 <div>
                     <div class="panel-title">Login</div>
-                    <div class="panel-sub">2 fields per row — consistent with register</div>
+                    <div class="panel-sub">Sign in to continue</div>
                 </div>
                 <span class="tag tag-green">Secure</span>
             </div>

@@ -170,7 +170,7 @@
     @php
         $marqueeRaw = \App\Models\Setting::where('key','marquee_news')->value('value');
         if(!$marqueeRaw){
-            $marqueeRaw = \App\Models\Setting::getValue('university_acronym','UDOM') . ' 2026/2027 Admissions Open — Bachelor Round 2 Closes 21 Sep 2026 | Foreign Applicants: Free Application Window till 30 Sep 2026 | Masters, PGD & PhD Applications Ongoing | Verify Your Admission Instantly Online | Contact Admissions Office: admissions@udom.ac.tz';
+            $marqueeRaw = \App\Models\Setting::getValue('university_acronym','UDOM') . ' 2026/2027 Admissions Open — Bachelor Round 2 Closes 21 Sep 2026 | Foreign Applicants: Free Application Window till 30 Sep 2026 | Masters, PGD & PhD Applications Ongoing | Verify Your Admission Instantly Online | Contact Admissions Office: {{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }};
         }
         $newsItems = array_filter(array_map('trim', explode('|', $marqueeRaw)));
     @endphp
@@ -210,48 +210,26 @@
                 <span class="tag tag-green" style="font-size:11px">Online</span>
             </div>
             <div class="udom-grid">
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6"/><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M6 12l6 3 6-3"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">Undergraduate Studies</div><div class="udom-item-num"><a href="tel:+255752811050" style="color:inherit;text-decoration:none;">0752811050</a></div></div>
-                </div>
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">Support Team</div><div class="udom-item-num"><a href="tel:+255734986490" style="color:inherit;text-decoration:none;">0734986490</a></div></div>
-                </div>
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">Support Team</div><div class="udom-item-num"><a href="tel:+255734986486" style="color:inherit;text-decoration:none;">0734986486</a></div></div>
-                </div>
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">Support Team</div><div class="udom-item-num"><a href="tel:+255752994657" style="color:inherit;text-decoration:none;">0752994657</a></div></div>
-                </div>
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">Support Team</div><div class="udom-item-num"><a href="tel:+255752550837" style="color:inherit;text-decoration:none;">0752550837</a></div></div>
-                </div>
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M6 12l6 3 6-3"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">Postgraduate Studies</div><div class="udom-item-num"><a href="tel:+255683936599" style="color:inherit;text-decoration:none;">0683936599</a></div></div>
-                </div>
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">TIZO MAVUNGE</div><div class="udom-item-num"><a href="tel:+255715622688" style="color:inherit;text-decoration:none;">0715622688</a></div></div>
-                </div>
-                <div class="udom-item">
-                    <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M6 12l6 3 6-3"/></svg></div>
-                    <div class="udom-item-info"><div class="udom-item-title">ASWILA</div><div class="udom-item-num"><a href="tel:+255753000000" style="color:inherit;text-decoration:none;">0753000000</a></div><div class="udom-item-sub">Admissions Assistant</div></div>
-                </div>
+                @php $contactOfficers = \App\Models\SupportOfficer::where('is_active',1)->orderBy('order_index')->get(); @endphp
+                @forelse($contactOfficers as $o)
+                    @php $tel = preg_replace('/^0/','255', preg_replace('/\D/','',$o->phone)); @endphp
+                    <div class="udom-item">
+                        <div class="udom-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                        <div class="udom-item-info"><div class="udom-item-title">{{ $o->name }}</div><div class="udom-item-num"><a href="tel:{{ $tel }}" style="color:inherit;text-decoration:none;">{{ $o->phone }}</a></div>@if($o->designation)<div class="udom-item-sub">{{ $o->designation }}</div>@endif</div>
+                    </div>
+                @empty
+                    <div class="udom-item"><div class="udom-item-info"><div class="udom-item-title">Support Team</div><div class="udom-item-num"><a href="tel:+255{{ preg_replace('/^0/','',preg_replace('/\D/','',\App\Models\Setting::getValue('admissions_phone','+255 26 231 0300'))) }}" style="color:inherit;text-decoration:none;">{{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }}</a></div></div></div>
+                @endforelse
             </div>
             <div style="margin-top:8px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--sand-50);display:flex;gap:10px;align-items:center;">
                 <div class="udom-item-icon" style="width:32px;height:32px;background:var(--white)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
                 <div style="flex:1;min-width:0;"><div class="udom-item-title">Admissions Email</div><div class="udom-item-num" style="font-size:13px;">{{ \App\Models\Setting::where('key','admissions_email')->value('value') ?? 'admissions@udom.ac.tz' }}</div></div>
             </div>
-            <div style="padding:8px 2px 2px;font-size:11px;color:var(--ink-soft);line-height:1.5;">Mon–Sat 08:00–20:00 EAT · Email response within 24h · Have your application number ready.</div>
+            <div style="padding:8px 2px 2px;font-size:11px;color:var(--ink-soft);line-height:1.5;">{{ \App\Models\Setting::getValue('support_hours','Mon–Sat 08:00–20:00 EAT') }} · Email response within 24h · Have your application number ready.</div>
         </div>
         <div class="udom-panel-foot">
             <a href="{{ route('public.contact') }}" class="btn btn-ghost btn-sm" style="flex:1;">Contact Form</a>
-            <a href="tel:+255262310300" class="btn btn-primary btn-sm" style="flex:1;">Call Now</a>
+            <a href="tel:+255{{ preg_replace('/^0/','',preg_replace('/\D/','',\App\Models\Setting::getValue('admissions_phone','+255 26 231 0300'))) }}" class="btn btn-primary btn-sm" style="flex:1;">Call Now</a>
         </div>
     </div>
     <script>
@@ -275,7 +253,7 @@
             <div><div style="font-weight:700;">{{ \App\Models\Setting::getValue('university_name','University OAS') }}</div><p style="color:rgba(255,255,255,.6);font-size:13px;margin-top:8px;line-height:1.6;">Tanzania University Online Admission System — Certificate, Diploma, Bachelor, PGD, Masters & PhD.</p></div>
             <div><div style="font-weight:600;font-size:13px;">Admissions</div><div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:rgba(255,255,255,.6);"><a href="{{ route('public.calendar') }}">Calendar</a><a href="{{ route('public.programmes') }}">Programmes</a><a href="{{ route('public.requirements') }}">Requirements</a></div></div>
             <div><div style="font-weight:600;font-size:13px;">Support</div><div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:rgba(255,255,255,.6);"><a href="{{ route('public.verify') }}">Verify Admission</a><a href="{{ route('public.fees') }}">Fees</a><a href="{{ route('public.contact') }}">Contact</a></div></div>
-            <div><div style="font-weight:600;font-size:13px;">Contact</div><p style="color:rgba(255,255,255,.6);font-size:13px;margin-top:10px;line-height:1.6;">Admissions Office<br>Main Campus<br>admissions@university.ac.tz</p></div>
+            <div><div style="font-weight:600;font-size:13px;">Contact</div><p style="color:rgba(255,255,255,.6);font-size:13px;margin-top:10px;line-height:1.6;">{{ \App\Models\Setting::getValue('admissions_office','Admissions Office') }}<br>{{ \App\Models\Setting::getValue('contact_campus','Main Campus') }}<br>{{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}<br>{{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }}</p></div>
         </div>
         <div style="border-top:1px solid rgba(255,255,255,.08);padding:16px 24px;text-align:center;color:rgba(255,255,255,.4);font-size:12px;">&copy; {{ date('Y') }} {{ \App\Models\Setting::getValue('university_name','University') }}. All Rights Reserved.</div>
     </footer>

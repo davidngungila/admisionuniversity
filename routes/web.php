@@ -30,6 +30,8 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SmsLogController;
+use App\Http\Controllers\Admin\SignatoryController;
+use App\Http\Controllers\Admin\SupportOfficerController;
 
 // ── Public ──────────────────────────────────────────────────────────
 Route::get('/', [PublicController::class, 'home'])->name('home');
@@ -153,8 +155,14 @@ Route::middleware(['auth', 'active', 'role:super_admin,admin,staff'])->prefix('a
     Route::post('selection/batches/{batch}/run', [SelectionController::class, 'run'])->name('selection.run');
     Route::patch('selection/results/{result}', [SelectionController::class, 'updateResult'])->name('selection.result.update');
 
-    // Users
+// Users
     Route::resource('users', AdminUser::class)->except(['show']);
+
+    // Signatories (university officers signing admission documents)
+    Route::resource('signatories', SignatoryController::class)->except(['show']);
+
+    // Support officers (public helpline panel)
+    Route::resource('support-officers', SupportOfficerController::class)->except(['show']);
 
     // Reports
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');

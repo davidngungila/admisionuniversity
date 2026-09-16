@@ -33,7 +33,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
   @endif
   <div style="font-weight:800; font-size:14pt; margin-top:6px;">{{ strtoupper(\App\Models\Setting::getValue('university_name','University of Dodoma')) }}</div>
   <div style="font-size:8pt; letter-spacing:1px; color:#6B5A48;">Chuo Kikuu Cha Dodoma</div>
-  <div style="font-size:7.5pt; color:#6B5A48; margin-top:4px;">P.O. Box 259, Dodoma, Tanzania &middot; Tel: +255 26 231 0300 &middot; admissions@udom.ac.tz</div>
+  <div style="font-size:7.5pt; color:#6B5A48; margin-top:4px;">{{ \App\Models\Setting::getValue('contact_box','P.O. Box 259') }}, {{ \App\Models\Setting::getValue('contact_city','Dodoma, Tanzania') }} &middot; Tel: {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }} &middot; {{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}</div>
 </div>
 <div class="meta">
   <table><tr>
@@ -62,10 +62,27 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
   </div>
   <div style="margin-top:10px; background:#E2E7D4; border:1px solid #c8d7a8; padding:8px 10px; border-radius:6px; font-size:9pt; color:#5E6E3F;"><strong>Letter:</strong> {{ $letter->content }}</div>
   <p style="margin-top:10px;">You are required to confirm your admission and report with originals and copies of this letter, academic certificates, birth certificate, NIDA/passport and four passport photos.</p>
-  <div style="margin-top:16px; display:flex; justify-content:space-between; font-size:9pt;">
-    <div>Wishing you success.<br><strong>For: Vice Chancellor</strong><br>{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}</div>
-    <div style="text-align:center;"><div style="width:100px; height:1px; background:#2A1B10; margin:24px auto 4px;"></div>Registrar &mdash; Academic<br>{{ $letter->issued_at?->format('d F Y') ?? $letter->created_at->format('d F Y') }}</div>
-  </div>
+  @php $letterSignatories = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->get(); @endphp
+  @if($letterSignatories->count())
+    <div style="margin-top:16px; display:flex; justify-content:space-between; gap:18px; font-size:9pt;">
+      @foreach($letterSignatories as $sig)
+        <div style="flex:1; text-align:center; max-width:48%;">
+          @if($sig->signature_image && file_exists(public_path($sig->signature_image)))
+            <img src="{{ public_path($sig->signature_image) }}" style="height:42px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
+          @else
+            <div style="height:42px; border-bottom:1px solid #2A1B10; margin:14px 0 4px;"></div>
+          @endif
+          <div style="font-weight:800;">For: {{ $sig->title ? $sig->title.' ' : '' }}{{ $sig->name }}</div>
+          <div style="font-size:8pt; color:#6B5A48;">{{ $sig->designation ?? '' }}<br>{{ $letter->issued_at?->format('d F Y') ?? $letter->created_at->format('d F Y') }}</div>
+        </div>
+      @endforeach
+    </div>
+  @else
+    <div style="margin-top:16px; display:flex; justify-content:space-between; font-size:9pt;">
+      <div>Wishing you success.<br><strong>For: Vice Chancellor</strong><br>{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}</div>
+      <div style="text-align:center;"><div style="width:100px; height:1px; background:#2A1B10; margin:24px auto 4px;"></div>Registrar &mdash; Academic<br>{{ $letter->issued_at?->format('d F Y') ?? $letter->created_at->format('d F Y') }}</div>
+    </div>
+  @endif
   <div style="margin-top:16px; border-top:1px dashed #E4D7C2; padding-top:6px; font-size:7.5pt; color:#6B5A48;">System-generated valid without signature when verified at {{ url('/verify-admission') }} &middot; Ref: {{ $letter->letter_number }} &middot; {{ $application->application_number }}</div>
 </div>
 </body>

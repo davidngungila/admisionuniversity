@@ -15,18 +15,18 @@
     <div class="grid-2" style="align-items:start;">
         <div class="panel">
             <div class="panel-head">
-                <div class="panel-title">Admissions Office</div>
-                <span class="tag tag-terracotta">Main Campus</span>
+                <div class="panel-title">{{ \App\Models\Setting::getValue('admissions_office','Admissions Office') }}</div>
+                <span class="tag tag-terracotta">{{ \App\Models\Setting::getValue('contact_campus','Main Campus') }}</span>
             </div>
             <div class="panel-body">
                 <div class="kv">
-                    <div class="kv-row"><span class="k">Address</span><span class="v" style="text-align:right;">Main Campus<br>University</span></div>
-                    <div class="kv-row"><span class="k">Email</span><span class="v">admissions@university.ac.tz</span></div>
-                    <div class="kv-row"><span class="k">Phone</span><span class="v">+255 7xx xxx xxx</span></div>
-                    <div class="kv-row"><span class="k">Hours</span><span class="v">Mon–Fri 08:00–16:30 (Africa/Dar_es_Salaam)</span></div>
+                    <div class="kv-row"><span class="k">Address</span><span class="v" style="text-align:right;">{{ \App\Models\Setting::getValue('admissions_office','Admissions Office') }}<br>{{ \App\Models\Setting::getValue('contact_box','P.O. Box 259') }}<br>{{ \App\Models\Setting::getValue('contact_city','Dodoma, Tanzania') }}</span></div>
+                    <div class="kv-row"><span class="k">Email</span><span class="v">{{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}</span></div>
+                    <div class="kv-row"><span class="k">Phone</span><span class="v">{{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }}</span></div>
+                    <div class="kv-row"><span class="k">Hours</span><span class="v">{{ \App\Models\Setting::getValue('support_hours','Mon–Sat 08:00–20:00 EAT') }}</span></div>
                 </div>
                 <div style="margin-top:16px;display:flex;gap:10px;">
-                    <a href="mailto:admissions@university.ac.tz" class="btn btn-ghost btn-sm" style="flex:1;">Email Us</a>
+                    <a href="mailto:{{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}" class="btn btn-ghost btn-sm" style="flex:1;">Email Us</a>
                     <a href="{{ route('public.calendar') }}" class="btn btn-ghost btn-sm" style="flex:1;">Calendar</a>
                 </div>
             </div>
