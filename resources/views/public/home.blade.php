@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div style="margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--white);text-align:left;">
-                <div style="font-weight:800;color:var(--coffee-900);">Why Choose {{ \App\Models\Setting::getValue('university_acronym','UDOM') }}?</div>
+                <div style="font-weight:800;color:var(--coffee-900);text-align:center;">Why Choose {{ \App\Models\Setting::getValue('university_acronym','UDOM') }}?</div>
                 <div class="why-grid" style="margin-top:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center;">
                     <div><div style="font-weight:800;font-size:18px;color:var(--terracotta-600)">50+</div><div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:700">Academic Programmes</div></div>
                     <div><div style="font-weight:800;font-size:18px;color:var(--terracotta-600)">15,000+</div><div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:700">Current Students</div></div>
