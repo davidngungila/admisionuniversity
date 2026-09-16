@@ -170,7 +170,7 @@
     @php
         $marqueeRaw = \App\Models\Setting::where('key','marquee_news')->value('value');
         if(!$marqueeRaw){
-            $marqueeRaw = \App\Models\Setting::getValue('university_acronym','UDOM') . ' 2026/2027 Admissions Open — Bachelor Round 2 Closes 21 Sep 2026 | Foreign Applicants: Free Application Window till 30 Sep 2026 | Masters, PGD & PhD Applications Ongoing | Verify Your Admission Instantly Online | Contact Admissions Office: {{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }};
+            $marqueeRaw = \App\Models\Setting::getValue('university_acronym','UDOM') . ' 2026/2027 Admissions Open — Bachelor Round 2 Closes 21 Sep 2026 | Foreign Applicants: Free Application Window till 30 Sep 2026 | Masters, PGD & PhD Applications Ongoing | Verify Your Admission Instantly Online | Contact Admissions Office: ' . \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') . ';';
         }
         $newsItems = array_filter(array_map('trim', explode('|', $marqueeRaw)));
     @endphp
