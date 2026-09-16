@@ -87,10 +87,10 @@
         .p-bottombar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 
         /* UDOM Support FAB */
-        .udom-fab{position:fixed;bottom:22px;right:22px;z-index:120;width:56px;height:56px;border-radius:50%;background:linear-gradient(155deg,var(--terracotta-600),var(--gold-500));color:#fff;border:none;box-shadow:0 8px 24px rgba(194,89,43,.45),0 2px 8px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+        .udom-fab{position:fixed;bottom:22px;right:22px;z-index:120;height:56px;width:auto;border-radius:999px;background:linear-gradient(155deg,var(--terracotta-600),var(--gold-500));color:#fff;border:none;box-shadow:0 8px 24px rgba(194,89,43,.45),0 2px 8px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;gap:8px;padding:0 20px;cursor:pointer;transition:transform .15s,box-shadow .15s;font-size:14px;font-weight:700;letter-spacing:.01em;}
         .udom-fab:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(194,89,43,.5);}
         .udom-fab:active{transform:scale(.96);}
-        .udom-fab svg{width:26px;height:26px;}
+        .udom-fab svg{width:18px;height:18px;}
         .udom-panel{position:fixed;bottom:88px;right:22px;z-index:119;width:520px;max-width:calc(100vw - 32px);background:var(--white);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden;display:none;flex-direction:column;max-height:78vh;}
         .udom-panel.open{display:flex;animation:udomIn .2s ease;}
         @keyframes udomIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
@@ -110,7 +110,7 @@
         .udom-overlay{position:fixed;inset:0;z-index:118;background:rgba(36,20,8,.18);display:none;}
         .udom-overlay.open{display:block;}
         @media(max-width:640px){.udom-grid{grid-template-columns:1fr;}}
-        @media(max-width:480px){.udom-fab{bottom:16px;right:16px;width:52px;height:52px}.udom-panel{bottom:76px;right:16px;left:16px;width:auto}}
+        @media(max-width:480px){.udom-fab{bottom:16px;right:16px;height:50px;padding:0 16px;font-size:12.5px;gap:6px}.udom-panel{bottom:76px;right:16px;left:16px;width:auto}}
 
         @media(max-width:1100px){.p-nav-inner{padding:0 20px;}.p-topbar-inner{padding:7px 20px;}.p-bottombar-inner{padding:12px 20px;}}
         @media(max-width:900px){.p-links{display:none;}.p-nav-inner{padding:0 16px;gap:12px;}.p-actions{gap:8px;}.p-topbar-left span:nth-child(3){display:none;}}
@@ -195,8 +195,9 @@
 
     <div id="toastHost"></div>
     <div class="udom-overlay" id="udomOverlay" onclick="toggleUdomPanel(false)"></div>
-    <button class="udom-fab" id="udomFab" onclick="toggleUdomPanel()" aria-label="{{ \App\Models\Setting::getValue('university_acronym','UDOM') }} Support Helpline">
+    <button class="udom-fab" id="udomFab" onclick="toggleUdomPanel()" aria-label="Help Desk">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>
+        <span>Help Desk</span>
     </button>
     <div class="udom-panel" id="udomPanel" role="dialog" aria-label="{{ \App\Models\Setting::getValue('university_acronym','UDOM') }} Support Helpline & Technical Desk">
         <div class="udom-panel-head">
