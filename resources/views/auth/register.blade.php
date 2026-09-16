@@ -49,32 +49,36 @@
                     {{-- 2. NECTA name check --}}
                     <div class="reg-step" data-step="2">
                         <div style="font-weight:800;font-size:14px;color:var(--coffee-900);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--line);">2. NECTA Name Check</div>
-                        <div class="field @error('first_name') err @enderror">
-                            <label class="field-label">First Name (Required for NECTA fetch) *</label>
-                            <input name="first_name" id="reg-first-name" value="{{ old('first_name') }}" required placeholder="Please enter your first name">
-                            @error('first_name')<span class="field-err">{{ $message }}</span>@enderror
+                        <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;" class="reg-necta-row">
+                            <div class="field @error('first_name') err @enderror" style="margin:0;">
+                                <label class="field-label">First Name (Required for NECTA fetch) *</label>
+                                <input name="first_name" id="reg-first-name" value="{{ old('first_name') }}" required placeholder="Please enter your first name">
+                                @error('first_name')<span class="field-err">{{ $message }}</span>@enderror
+                            </div>
+                            <button type="button" class="btn btn-soft" id="reg-verify-btn" onclick="verifyWithNecta()" style="margin:0;white-space:nowrap;">Verify &amp; Fetch Name from NECTA</button>
                         </div>
                         <div id="reg-verify-result" style="display:none;margin-top:14px;padding:10px 12px;border-radius:8px;background:#ecfdf3;border:1px solid #abefc6;color:#067647;font-size:13px;">
                             ✓ Verified with NECTA — <b id="reg-full-name"></b>
                         </div>
                         <div id="reg-verify-err" style="display:none;color:#b42318;background:#fef3f2;border:1px solid #fecdca;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-top:12px;"></div>
-                        <button type="button" class="btn btn-soft" style="width:100%;margin-top:16px;" id="reg-verify-btn" onclick="verifyWithNecta()">Verify &amp; Fetch Name from NECTA</button>
                     </div>
 
                     {{-- 3. Contact details --}}
                     <div class="reg-step" data-step="3">
                         <div style="font-weight:800;font-size:14px;color:var(--coffee-900);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--line);">3. Contact Details</div>
-                        <div class="field @error('phone') err @enderror">
-                            <label class="field-label">Phone Number *</label>
-                            <input name="phone" value="{{ old('phone') }}" required placeholder="+255715000001">
-                            <span class="field-hint">e.g. +255715000001 — include country code</span>
-                            @error('phone')<span class="field-err">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="field @error('email') err @enderror" style="margin-top:14px;">
-                            <label class="field-label">Email Address *</label>
-                            <input name="email" type="email" value="{{ old('email') }}" required placeholder="you@example.com">
-                            <span class="field-hint">Enter a valid / working email</span>
-                            @error('email')<span class="field-err">{{ $message }}</span>@enderror
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" class="reg-contact-row">
+                            <div class="field @error('phone') err @enderror" style="margin:0;">
+                                <label class="field-label">Phone Number *</label>
+                                <input name="phone" value="{{ old('phone') }}" required placeholder="+255715000001">
+                                <span class="field-hint">e.g. +255715000001 — include country code</span>
+                                @error('phone')<span class="field-err">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="field @error('email') err @enderror" style="margin:0;">
+                                <label class="field-label">Email Address *</label>
+                                <input name="email" type="email" value="{{ old('email') }}" required placeholder="you@example.com">
+                                <span class="field-hint">Enter a valid / working email</span>
+                                @error('email')<span class="field-err">{{ $message }}</span>@enderror
+                            </div>
                         </div>
                     </div>
 
@@ -190,6 +194,6 @@ document.getElementById('reg-form')?.addEventListener('submit', function (e) {
 });
 </script>
 <style>
-@media(max-width:900px){ .reg-grid{grid-template-columns:1fr !important;} .reg-pw-row{grid-template-columns:1fr !important;} }
+@media(max-width:900px){ .reg-grid{grid-template-columns:1fr !important;} .reg-pw-row,.reg-contact-row,.reg-necta-row{grid-template-columns:1fr !important;} }
 </style>
 @endsection
