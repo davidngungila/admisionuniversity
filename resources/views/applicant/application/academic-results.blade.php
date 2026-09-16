@@ -138,6 +138,21 @@
     </div>
 </div>
 
+<div class="modal-backdrop" id="arAlertBackdrop" onclick="if(event.target===this)closeModal('arAlertBackdrop')">
+    <div class="modal modal-sm">
+        <div class="modal-body" style="text-align:center;padding:28px 22px 18px">
+            <div class="es-icon" style="background:var(--terracotta-100);border-color:#e8b4b0;color:var(--terracotta-600);margin-bottom:14px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <h3 style="font-size:15px;font-weight:800;color:var(--coffee-900)">Please check</h3>
+            <p id="arAlertMsg" style="font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.5"></p>
+        </div>
+        <div class="modal-foot" style="justify-content:center">
+            <button type="button" class="btn btn-primary btn-sm" onclick="closeModal('arAlertBackdrop')">OK</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const FETCH_ROUTE = "{{ route('applicant.application.results.fetch', encId($application->id)) }}";
 const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -157,6 +172,10 @@ function blockIndex(block) {
     return m ? m[1] : '0';
 }
 function showError(el, msg) { el.textContent = msg; el.style.display = ''; }
+function arAlert(msg) {
+    document.getElementById('arAlertMsg').textContent = msg;
+    openModal('arAlertBackdrop');
+}
 
 function applyExamTypeUI(block) {
     const meta = EXAM_META[block.querySelector('.ar-exam-type').value] || EXAM_META['O-Level'];
@@ -212,7 +231,9 @@ async function fetchOfficialResult(block) {
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-            showError(err, data.error || 'Could not fetch results. Please check the details and try again.');
+            const msg = data.error || 'Could not fetch results. Please check the details and try again.';
+            showError(err, msg);
+            arAlert(msg);
             btn.disabled = false; lab.textContent = original;
             return;
         }
@@ -237,7 +258,9 @@ async function fetchOfficialResult(block) {
         block.querySelector('.ar-change-btn').style.display = '';
         block.querySelector('.ar-change-btn').textContent = meta.provider === 'NECTA' ? 'Change index number' : 'Change details';
     } catch (e) {
-        showError(err, 'Network error. Please check your connection and try again.');
+        const msg = 'Network error. Please check your connection and try again.';
+        showError(err, msg);
+        arAlert(msg);
         btn.disabled = false; lab.textContent = original;
     }
 }
