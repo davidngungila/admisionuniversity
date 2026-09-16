@@ -57,7 +57,7 @@
         <div class="panel-head"><div class="panel-title">Results</div></div>
         <div class="panel-body">
             @forelse($application->academicResults as $r)
-                <div class="kv" style="margin-bottom:8px"><div class="kv-row"><span class="k">{{ $r->exam_type }} {{ $r->index_number }} ({{ $r->exam_year }})</span><span class="v">{{ count($r->results ?? []) }} subjects</span></div></div>
+                <div class="kv" style="margin-bottom:8px"><div class="kv-row"><span class="k">{{ $r->exam_type }} {{ $r->index_number }} ({{ $r->exam_year }})</span><span class="v"><span class="tag {{ $r->is_verified ? 'tag-green' : 'tag-grey' }}">{{ $r->is_verified ? 'Auto-verified · '.($r->exam_body ?? 'External') : 'Pending verification' }}</span> · {{ count($r->results ?? []) }} subjects</span></div></div>
             @empty
                 <div class="empty-state" style="padding:20px"><strong>No results</strong><p>No academic results submitted.</p></div>
             @endforelse

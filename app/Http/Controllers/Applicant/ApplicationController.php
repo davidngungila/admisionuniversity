@@ -435,7 +435,6 @@ class ApplicationController extends Controller
             'results' => ['required', 'array', 'min:1'],
             'results.*.exam_type'   => ['required', 'string', 'max:40'],
             'results.*.exam_body'   => ['required', 'string', 'max:80'],
-            'results.*.is_verified' => ['required', 'boolean'],
             'results.*.index_number'=> ['required', 'string', 'max:40'],
             'results.*.exam_year'   => ['nullable', 'integer', 'min:1980', 'max:'.(date('Y') + 1)],
             'results.*.school_name' => ['nullable', 'string', 'max:191'],
@@ -444,25 +443,60 @@ class ApplicationController extends Controller
             'results.*.subjects.*.grade'   => ['required', 'string', 'max:10'],
         ]);
 
-        DB::transaction(function () use ($application, $validated) {
-            foreach ($validated['results'] as $item) {
+        $verify = app(\App\Services\ResultVerificationService::class);
+
+        DB::transaction(function () use ($application, $validated, $verify) {
+            foreach ($validated['results'] as $key => $item) {
+                $provider = strtoupper($item['exam_body'] ?? '');
+
+                if (! in_array($provider, ['NECTA', 'NACTVET'], true)) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'results.'.$key.'.exam_body' => 'Every result must be fetched and verified from NECTA or NACTVET.',
+                    ]);
+                }
+
+                $examType   = $item['exam_type'];
+                $identifier = $item['index_number'];
+                $year       = $item['exam_year'] ?? null;
+
+                $payload = in_array($examType, ['O-Level', 'A-Level'], true)
+                    ? ['index_number' => $identifier, 'exam_year' => $year]
+                    : ($examType === 'Certificate'
+                        ? ['registration_number' => $identifier, 'exam_year' => $year]
+                        : ['avn_number' => $identifier]);
+
+                // Auto-verify the entered details against the official source before saving.
+                $fetched = $verify->verify($examType, $payload);
+
+                if (empty($fetched['ok']) || empty($fetched['subjects'])) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'results.'.$key.'.index_number' => 'We could not verify this result with '.$provider.'. Please re-fetch from the official source and try again.',
+                    ]);
+                }
+
+                if ($this->normalizeSubjects($item['subjects']) !== $this->normalizeSubjects($fetched['subjects'])) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'results.'.$key.'.subjects' => 'The subjects/grades entered do not match the official '.$provider.' record. Please re-fetch from the official source.',
+                    ]);
+                }
+
                 $passes = collect($item['subjects'])
                     ->filter(fn ($s) => in_array(strtoupper($s['grade']), ['A', 'B', 'C', 'D', 'E'], true))
                     ->count();
 
                 AcademicResult::create([
                     'application_id'  => $application->id,
-                    'exam_type'       => $item['exam_type'],
-                    'exam_body'       => $item['exam_body'] ?? null,
-                    'index_number'    => $item['index_number'],
-                    'exam_year'       => $item['exam_year'] ?? null,
-                    'school_name'     => $item['school_name'] ?? null,
-                    'results'         => $item['subjects'],
-                    'total_subjects'  => count($item['subjects']),
+                    'exam_type'       => $examType,
+                    'exam_body'       => $provider,
+                    'index_number'    => $identifier,
+                    'exam_year'       => $year,
+                    'school_name'     => $fetched['school_name'] ?? ($item['school_name'] ?? null),
+                    'results'         => $fetched['subjects'],
+                    'total_subjects'  => count($fetched['subjects']),
                     'passes_count'    => $passes,
-                    'overall_grade'   => $this->overallGrade($item['subjects']),
-                    'is_verified'     => $item['is_verified'] ?? false,
-                    'verified_at'     => ! empty($item['is_verified']) ? now() : null,
+                    'overall_grade'   => $this->overallGrade($fetched['subjects']),
+                    'is_verified'     => true,
+                    'verified_at'     => now(),
                 ]);
             }
         });
@@ -470,6 +504,17 @@ class ApplicationController extends Controller
         $this->markCompleted($application, $step);
 
         return $this->redirectToNextStep($application);
+    }
+
+    protected function normalizeSubjects(array $subjects): array
+    {
+        $canonical = array_map(
+            fn ($s) => strtoupper(trim($s['subject'] ?? '')).'|'.strtoupper(trim($s['grade'] ?? '')),
+            $subjects
+        );
+        sort($canonical);
+
+        return $canonical;
     }
 
     public function fetchResult(Request $request, Application $application)
