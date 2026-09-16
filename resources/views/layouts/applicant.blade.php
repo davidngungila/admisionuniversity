@@ -54,7 +54,7 @@
         @media(max-width:900px){.sidebar{transform:translateX(-100%);width:var(--sidebar-w);}.sidebar.mobile-open{transform:translateX(0);}.main{margin-left:0 !important;}.topbar{flex-wrap:wrap;height:auto;min-height:var(--topbar-h);padding:10px 16px;gap:10px;}}
         @media(max-width:768px){.tb-ay{font-size:13px;}.tb-progress{font-size:11px;padding:5px 10px;}.tb-progress div[style*="width:60px"]{display:none;}}
 @media(max-width:640px){.view-wrap{padding:16px;}.topbar{padding:8px 14px;gap:8px;flex-wrap:nowrap;}.tb-right{gap:8px;flex-wrap:nowrap;}.tb-profile-text{max-width:96px;overflow:hidden;}.tb-ay{display:none;}.tb-progress{padding:4px 9px;font-size:10.5px;gap:6px;}.tb-profile{padding-left:8px;margin-left:4px;gap:8px;}.tb-profile .sb-avatar{width:32px;height:32px;}}
-@media(max-width:480px){.tb-profile-email{display:none;}.tb-progress span{max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
+@media(max-width:480px){.tb-profile-email{display:none;}.tb-progress .p-label{display:none;}}
         .btn{padding:12px 20px;border-radius:8px;border:none;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;}
         .btn-primary{background:var(--terracotta-600);color:#fff;box-shadow:0 6px 16px rgba(194,89,43,.32);}
         .btn-primary:hover{background:#D06B3A;}.btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--coffee-700);}
@@ -137,7 +137,7 @@
                 @if($firstApp)
                     @php $steps = $steps ?? $firstApp->admissionWindow->admissionLevel->workflowSteps()->where('is_active',true)->orderBy('step_number')->get(); $done = $firstApp->stepCompletions()->whereNotNull('completed_at')->count(); $total = $steps->count(); $pct = $total ? round($done/$total*100) : 0; @endphp
                     <div class="tb-progress" style="display:flex;align-items:center;gap:8px;background:var(--terracotta-600);color:#fff;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 4px 12px rgba(194,89,43,.25);">
-                        <span>Progress — {{ $done }}/{{ $total }} ({{ $pct }}%)</span>
+                        <span class="p-label">Progress —</span> <span class="p-val">{{ $done }}/{{ $total }} ({{ $pct }}%)</span>
                         <div style="width:60px;height:6px;background:rgba(255,255,255,.28);border-radius:10px;overflow:hidden;flex:none;"><div style="height:100%;background:var(--gold-500);width:{{ $pct }}%"></div></div>
                     </div>
                 @endif
