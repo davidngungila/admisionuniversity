@@ -140,7 +140,7 @@
         <footer class="sb-footer">
             <div class="sb-user">
                 <div class="sb-avatar">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
-                <div class="sb-user-text"><strong>{{ auth()->user()->name }}</strong><span>{{ auth()->user()->roleLabel() }}</span></div>
+                <div class="sb-user-text"><strong>{{ auth()->user()->name }}</strong></div>
             </div>
         </footer>
     </aside>
