@@ -105,7 +105,9 @@ class ApplicationController extends Controller
             'phone'       => $user->phone,
             'email'       => $user->email,
             'exam_index_number' => session('reg_index_number'),
-            'application_type'  => session('reg_application_type'),
+            'entry_type'          => session('reg_entry_type'),
+            'scholarship_category'=> session('reg_scholarship_category'),
+            'application_type'    => session('reg_application_type'),
         ]);
     }
 
