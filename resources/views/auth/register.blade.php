@@ -81,14 +81,17 @@
                     {{-- 4. Password --}}
                     <div class="reg-step" data-step="4">
                         <div style="font-weight:800;font-size:14px;color:var(--coffee-900);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--line);">4. Set Password</div>
-                        <div class="field @error('password') err @enderror">
-                            <label class="field-label">Password *</label>
-                            <input name="password" type="password" required placeholder="••••••••">
-                            @error('password')<span class="field-err">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="field" style="margin-top:14px;">
-                            <label class="field-label">Confirm Password *</label>
-                            <input name="password_confirmation" type="password" required placeholder="••••••••">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" class="reg-pw-row">
+                            <div class="field @error('password') err @enderror">
+                                <label class="field-label">Password *</label>
+                                <input name="password" type="password" required placeholder="••••••••">
+                                @error('password')<span class="field-err">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="field">
+                                <label class="field-label">Confirm Password *</label>
+                                <input name="password_confirmation" type="password" required placeholder="••••••••">
+                                @error('password_confirmation')<span class="field-err">{{ $message }}</span>@enderror
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,6 +190,6 @@ document.getElementById('reg-form')?.addEventListener('submit', function (e) {
 });
 </script>
 <style>
-@media(max-width:900px){ .reg-grid{grid-template-columns:1fr !important;} }
+@media(max-width:900px){ .reg-grid{grid-template-columns:1fr !important;} .reg-pw-row{grid-template-columns:1fr !important;} }
 </style>
 @endsection
