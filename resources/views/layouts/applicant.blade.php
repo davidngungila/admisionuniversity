@@ -85,12 +85,26 @@
             @php $firstApp = auth()->user()->applicant?->applications()->latest()->first(); @endphp
             @if($firstApp)
                 @php $steps = $firstApp->admissionWindow->admissionLevel->workflowSteps()->where('is_active',true)->orderBy('step_number')->get(); @endphp
+                @php $locked = $blocked = false; @endphp
                 @foreach($steps as $st)
-                    @php $done = $firstApp->stepCompletions()->where('workflow_step_id',$st->id)->whereNotNull('completed_at')->exists(); $isActive = request()->is('applicant/applications/*/step/'.$st->route); @endphp
-                    <a href="{{ route('applicant.application.step', [encId($firstApp->id), $st->route]) }}" class="sb-item {{ $isActive ? 'active' : '' }} {{ $done ? 'done' : '' }}">
-                        <span class="dot">{{ $done ? '✓' : $st->step_number }}</span>
-                        <span>{{ $st->step_name }}</span>
-                    </a>
+                    @php
+                        $done = $firstApp->stepCompletions()->where('workflow_step_id',$st->id)->whereNotNull('completed_at')->exists();
+                        $isActive = request()->is('applicant/applications/*/step/'.$st->route);
+                        if (! $done && ! $isActive && ! $blocked) $done = false;
+                        $locked = $blocked && ! $done && ! $isActive;
+                        if (! $done) $blocked = true;
+                    @endphp
+                    @if($locked)
+                        <div class="sb-item locked" style="cursor:not-allowed;opacity:.5;pointer-events:none;">
+                            <span class="dot">{{ $done ? '✓' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' }}</span>
+                            <span>{{ $st->step_name }}</span>
+                        </div>
+                    @else
+                        <a href="{{ route('applicant.application.step', [encId($firstApp->id), $st->route]) }}" class="sb-item {{ $isActive ? 'active' : '' }} {{ $done ? 'done' : '' }}">
+                            <span class="dot">{{ $done ? '✓' : $st->step_number }}</span>
+                            <span>{{ $st->step_name }}</span>
+                        </a>
+                    @endif
                 @endforeach
             @else
                 <div style="padding:8px 12px;color:rgba(255,255,255,.4);font-size:12px;">Start an application from dashboard</div>
