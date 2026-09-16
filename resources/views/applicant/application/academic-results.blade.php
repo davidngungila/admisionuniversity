@@ -89,6 +89,8 @@
                     <div class="panel-body" style="display:flex;flex-direction:column;gap:14px;">
                         <input type="hidden" class="ar-exam-body" name="results[0][exam_body]" value="">
                         <input type="hidden" class="ar-verified" name="results[0][is_verified]" value="0">
+                        <input type="hidden" class="ar-year" name="results[0][exam_year]" value="">
+                        <input type="hidden" class="ar-school" name="results[0][school_name]" value="">
 
                         <div class="form-grid ar-grid">
                             <div class="field">
@@ -103,14 +105,6 @@
                             <div class="field ar-identifier-field">
                                 <label class="field-label ar-identifier-label">Index Number *</label>
                                 <input name="results[0][index_number]" class="ar-identifier" required placeholder="e.g. S0105/0013/2023">
-                            </div>
-                            <div class="field ar-year-field">
-                                <label class="field-label ar-year-label">Year *</label>
-                                <input name="results[0][exam_year]" class="ar-year" type="number" min="1980" max="{{ date('Y')+1 }}" value="{{ date('Y')-1 }}" required>
-                            </div>
-                            <div class="field">
-                                <label class="field-label">School / Institution</label>
-                                <input name="results[0][school_name]" class="ar-school" placeholder="School or institution name">
                             </div>
                         </div>
 
@@ -149,10 +143,10 @@ const FETCH_ROUTE = "{{ route('applicant.application.results.fetch', encId($appl
 const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const EXAM_META = {
-    'O-Level': { label: 'Index Number', placeholder: 'e.g. S0105/0013/2023', year: 'Year', fetch: 'Fetch from NECTA', provider: 'NECTA', hint: 'Enter your NECTA index number above and click <strong>Fetch from NECTA</strong> to load your official results.' },
-    'A-Level': { label: 'Index Number', placeholder: 'e.g. S0105/0013/2023', year: 'Year', fetch: 'Fetch from NECTA', provider: 'NECTA', hint: 'Enter your NECTA index number above and click <strong>Fetch from NECTA</strong> to load your official results.' },
-    'Certificate': { label: 'Registration Number', placeholder: 'e.g. FT/2023/000123', year: 'Year of Graduation', fetch: 'Fetch from NACTVET', provider: 'NACTVET', hint: 'Enter your NACTVET registration number and year of graduation above, then click <strong>Fetch from NACTVET</strong>.' },
-    'Diploma': { label: 'AVN Number', placeholder: 'e.g. AVN/2020/000456', year: null, fetch: 'Fetch from NACTVET', provider: 'NACTVET', hint: 'Enter your AVN number above, then click <strong>Fetch from NACTVET</strong> to load your results.' }
+    'O-Level': { label: 'Index Number', placeholder: 'e.g. S0105/0013/2023', fetch: 'Fetch from NECTA', provider: 'NECTA', hint: 'Enter your NECTA index number above and click <strong>Fetch from NECTA</strong> to load your official results.' },
+    'A-Level': { label: 'Index Number', placeholder: 'e.g. S0105/0013/2023', fetch: 'Fetch from NECTA', provider: 'NECTA', hint: 'Enter your NECTA index number above and click <strong>Fetch from NECTA</strong> to load your official results.' },
+    'Certificate': { label: 'Registration Number', placeholder: 'e.g. FT/2023/000123', fetch: 'Fetch from NACTVET', provider: 'NACTVET', hint: 'Enter your NACTVET registration number above, then click <strong>Fetch from NACTVET</strong> to load your results.' },
+    'Diploma': { label: 'AVN Number', placeholder: 'e.g. AVN/2020/000456', fetch: 'Fetch from NACTVET', provider: 'NACTVET', hint: 'Enter your AVN number above, then click <strong>Fetch from NACTVET</strong> to load your results.' }
 };
 
 function esc(s) {
@@ -168,19 +162,12 @@ function applyExamTypeUI(block) {
     const meta = EXAM_META[block.querySelector('.ar-exam-type').value] || EXAM_META['O-Level'];
     block.querySelector('.ar-identifier-label').textContent = meta.label + ' *';
     block.querySelector('.ar-identifier').placeholder = meta.placeholder;
-    const yf = block.querySelector('.ar-year-field');
-    if (meta.year) {
-        yf.style.display = '';
-        block.querySelector('.ar-year-label').textContent = meta.year + ' *';
-        block.querySelector('.ar-year').required = true;
-    } else {
-        yf.style.display = 'none';
-        block.querySelector('.ar-year').required = false;
-    }
     block.querySelector('.ar-fetch-label').textContent = meta.fetch;
     block.querySelector('.subjects-list').innerHTML = '<div class="ar-placeholder" style="border:1px dashed var(--line);border-radius:8px;padding:10px 12px;background:#fff;font-size:12.5px;color:var(--coffee-600);">' + meta.hint + '</div>';
     const err = block.querySelector('.ar-err'); err.style.display = 'none';
     setBlockFields(block, {});
+    block.querySelector('.ar-year').value = '';
+    block.querySelector('.ar-school').value = '';
     block.querySelector('.ar-change-btn').style.display = 'none';
 }
 
@@ -193,7 +180,6 @@ function setBlockFields(block, data) {
     if (data.verified) block.querySelector('.ar-fetch-label').textContent = 'Fetched ✓';
     block.querySelector('.ar-exam-type').disabled = !!data.verified;
     block.querySelector('.ar-identifier').readOnly = !!data.verified;
-    block.querySelector('.ar-year').readOnly = !!data.verified;
 }
 
 async function fetchOfficialResult(block) {
@@ -202,18 +188,15 @@ async function fetchOfficialResult(block) {
 
     const type = block.querySelector('.ar-exam-type').value;
     const identifier = block.querySelector('.ar-identifier').value.trim();
-    const year = block.querySelector('.ar-year').value.trim();
     const meta = EXAM_META[type];
 
     const payload = { exam_type: type };
     if (type === 'Certificate') {
         payload.registration_number = identifier;
-        payload.exam_year = year ? parseInt(year, 10) : null;
     } else if (type === 'Diploma') {
         payload.avn_number = identifier;
     } else {
         payload.index_number = identifier;
-        payload.exam_year = year ? parseInt(year, 10) : null;
     }
 
     const btn = block.querySelector('.ar-fetch-btn');
