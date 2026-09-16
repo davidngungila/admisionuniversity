@@ -101,5 +101,13 @@ document.addEventListener('DOMContentLoaded', function(){
       sbTimer = setTimeout(()=> sessionStorage.setItem('sbScroll', sbNav.scrollTop), 60);
     });
   }
+  // Back button → logout (block navigating back into previous screens)
+  const backGuardForm = document.getElementById('idleLogoutForm');
+  if(backGuardForm){
+    history.pushState({backGuard:true}, '', location.href);
+    window.addEventListener('popstate', function(){
+      backGuardForm.submit();
+    });
+  }
 });
 </script>

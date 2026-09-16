@@ -15,10 +15,7 @@
     $otherSettings = $settings->filter(fn($s)=> !in_array($s->key, array_merge($identityKeys,$smsKeys)));
 @endphp
 
-<form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" onsubmit="event.preventDefault(); const _f=this; confirmModal('Update settings','Save all changes?',()=>_f.submit())">
-    @csrf
-
-    {{-- Tabbed layout --}}
+{{-- Tabbed layout --}}
     <div class="settings-layout" style="display:grid;grid-template-columns:200px 1fr;gap:0;align-items:start;border:1.5px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;">
 
         {{-- Left tabs --}}
@@ -51,6 +48,8 @@
                     <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px 26px;">Controls what appears in the Admin Panel header, sidebar brand, loading screen and admission documents.</p>
                 </div>
                 <div style="padding:0 24px 24px;">
+                    <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" onsubmit="event.preventDefault(); const _f=this; confirmModal('Save identity settings','Save University Identity changes?',()=>_f.submit())">
+                    @csrf
                     {{-- Preview --}}
                     <div style="display:flex;gap:16px;align-items:center;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--sand-50);margin-bottom:18px;">
                         <div style="width:72px;height:72px;border-radius:14px;border:1.5px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none;">
@@ -89,6 +88,13 @@
                         <input type="file" name="university_logo" accept="image/*" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;">
                         <span class="field-hint">Leave empty to keep current. Replaces the mark in the Admin Panel, sidebar and documents.</span>
                     </div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:18px;">
+                        <button class="btn btn-primary" style="min-width:170px;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Save Identity
+                        </button>
+                    </div>
+                    </form>
                 </div>
             </div>
 
@@ -102,6 +108,8 @@
                     <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px 26px;">Powered by <strong>messaging-service.co.tz</strong> API V2. Sends SMS on application submission, selection, admission and confirmation codes.</p>
                 </div>
                 <div style="padding:0 24px 24px;">
+                    <form method="POST" action="{{ route('admin.settings.update') }}" onsubmit="event.preventDefault(); const _f=this; confirmModal('Save SMS settings','Save SMS Notifications changes?',()=>_f.submit())">
+                    @csrf
                     {{-- Bearer token callout --}}
                     <div style="padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,#fdf8f1,#f7f0e8);border:1.5px solid var(--gold-500);margin-bottom:18px;">
                         <div style="display:flex;align-items:flex-start;gap:10px;">
@@ -226,6 +234,13 @@
                             @if(auth()->user()->isAdministrator())<a href="{{ route('admin.sms-logs.index') }}" class="cell-sub" style="font-size:11.5px;align-self:center;color:var(--terracotta-600);font-weight:700;text-decoration:underline;">View SMS Logs →</a>@endif
                         </div>
                     </div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:18px;">
+                        <button class="btn btn-primary" style="min-width:170px;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Save SMS Settings
+                        </button>
+                    </div>
+                    </form>
                 </div>
             </div>
 
@@ -239,6 +254,8 @@
                     <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px 26px;">All other key-value settings. Add custom settings at the bottom.</p>
                 </div>
                 <div style="padding:0 24px 24px;">
+                    <form method="POST" action="{{ route('admin.settings.update') }}" onsubmit="event.preventDefault(); const _f=this; confirmModal('Save general settings','Save General Settings changes?',()=>_f.submit())">
+                    @csrf
                     @forelse($otherSettings as $s)
                         @php $idx = $s->getKey('id') ?? $loop->index; $formIdx = $settings->search(fn($x)=>$x->key===$s->key); @endphp
                         <div style="padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:center;" class="settings-row">
@@ -267,19 +284,18 @@
                             <div class="field"><label class="field-label">Group</label><input name="new_group" placeholder="general" value="general" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;"></div>
                         </div>
                     </div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+                        <button class="btn btn-primary" style="min-width:170px;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Save General Settings
+                        </button>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
-    {{-- Save button --}}
-    <div style="margin-top:16px;display:flex;justify-content:flex-end;">
-        <button class="btn btn-primary" style="min-width:160px;display:flex;align-items:center;justify-content:center;gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Save All Settings
-        </button>
-    </div>
-</form>
+</div>
 
 <style>
 .settings-tab{
