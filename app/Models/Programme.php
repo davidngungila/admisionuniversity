@@ -54,6 +54,18 @@ class Programme extends Model
         return $this->hasMany(ProgrammeRequirement::class);
     }
 
+    public function courses(): HasMany
+    {
+        return $this->hasMany(ProgrammeCourse::class)->orderBy('year')->orderBy('semester')->orderBy('course_code');
+    }
+
+    public function curriculum(): \Illuminate\Support\Collection
+    {
+        return $this->courses->groupBy('year')->map(function ($yCourses, $year) {
+            return $yCourses->groupBy('semester')->sortKeys();
+        })->sortKeys();
+    }
+
     public function applicationProgrammes(): HasMany
     {
         return $this->hasMany(ApplicationProgramme::class);

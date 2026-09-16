@@ -74,4 +74,91 @@
         </form>
     </div>
 </div>
+
+{{-- Curriculum (per year & semester) --}}
+<div class="panel" style="margin-top:18px">
+    <div class="panel-head">
+        <div class="panel-title">Curriculum — Courses per Year &amp; Semester</div>
+        <span class="tag tag-grey">{{ $programme->courses->count() }} courses</span>
+    </div>
+    <div class="panel-body">
+        @if($programme->curriculum->isEmpty())
+            <div class="empty-state" style="padding:24px">
+                <div class="es-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+                <strong>No curriculum configured.</strong><p>Add the courses studied in each year and semester below.</p>
+            </div>
+        @else
+            @foreach($programme->curriculum as $year => $semesters)
+                <div class="field" style="margin-top:14px">
+                    <label class="field-label">Year {{ $year }}</label>
+                    @foreach($semesters as $sem => $courses)
+                        <div style="margin-top:6px">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                                <span class="tag tag-blue">Semester {{ $sem }}</span>
+                                <span style="font-size:11px;color:var(--ink-soft);font-weight:700;">{{ $courses->sum('credit_hours') ? $courses->sum('credit_hours').' credits' : '' }}</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px;">
+                                @foreach($courses as $course)
+                                    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--sand-50);border:1px solid var(--line);border-radius:8px;">
+                                        <div style="flex:1;min-width:0;">
+                                            <div style="font-weight:700;font-size:13px;color:var(--coffee-900);">{{ $course->course_name }}</div>
+                                            <div style="font-size:11px;color:var(--ink-soft);margin-top:2px;">{{ $course->course_code ?: '—' }}@if($course->credit_hours) · {{ $course->credit_hours }} credits @endif</div>
+                                        </div>
+                                        <form method="POST" action="{{ route('admin.courses.destroy', encId($course->id)) }}" onsubmit="event.preventDefault(); const _f=this; confirmModal('Remove course','Remove this course from the curriculum?',()=>_f.submit())">
+                                            @csrf @method('DELETE')
+                                            <button class="btn btn-ghost btn-sm" title="Remove">×</button>
+                                        </form>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
+        @endif
+
+        <form method="POST" action="{{ route('admin.programmes.courses.store', encId($programme->id)) }}" style="margin-top:18px" onsubmit="event.preventDefault(); const _f=this; confirmModal('Add course','Are you sure you want to add this course?',()=>_f.submit())">
+            @csrf
+            <div class="panel" style="background:var(--sand-50)">
+                <div class="panel-body">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label class="field-label">Year</label>
+                            <select name="year" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;">
+                                @for($y=1;$y<=($programme->duration_years ?: 4);$y++)<option value="{{ $y }}" @selected(old('year')==$y)>Year {{ $y }}</option>@endfor
+                            </select>
+                            @error('year')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field">
+                            <label class="field-label">Semester</label>
+                            <select name="semester" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;">
+                                <option value="1" @selected(old('semester')==='1'||!old('semester'))>Semester 1</option>
+                                <option value="2" @selected(old('semester')==='2')>Semester 2</option>
+                            </select>
+                            @error('semester')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field">
+                            <label class="field-label">Course Code</label>
+                            <input name="course_code" placeholder="MCM 101" value="{{ old('course_code') }}">
+                            @error('course_code')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field">
+                            <label class="field-label">Course Name *</label>
+                            <input name="course_name" placeholder="Introduction to Cooperative Management" value="{{ old('course_name') }}">
+                            @error('course_name')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field">
+                            <label class="field-label">Credit Hours</label>
+                            <input name="credit_hours" placeholder="3" value="{{ old('credit_hours') }}">
+                            @error('credit_hours')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field" style="justify-content:flex-end">
+                            <button class="btn btn-primary" style="width:100%">Add Course</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

@@ -128,6 +128,23 @@ Route::middleware(['auth', 'active', 'role:super_admin,admin,staff'])->prefix('a
         return back()->with('success','Requirement added.');
     })->name('programmes.requirements.store');
 
+    Route::post('programmes/{programme}/courses', function (\Illuminate\Http\Request $r, \App\Models\Programme $programme) {
+        $d = $r->validate([
+            'year'           => ['required','integer','min:1','max:10'],
+            'semester'       => ['required','in:1,2'],
+            'course_code'    => ['nullable','string','max:30'],
+            'course_name'    => ['required','string','max:191'],
+            'credit_hours'   => ['nullable','numeric','min:0','max:99'],
+        ]);
+        $programme->courses()->create($d);
+        return back()->with('success','Course added to curriculum.');
+    })->name('programmes.courses.store');
+
+    Route::delete('courses/{course}', function (\App\Models\ProgrammeCourse $course) {
+        $course->delete();
+        return back()->with('success','Course removed from curriculum.');
+    })->name('courses.destroy');
+
     // Applicants & applications
     Route::get('applicants', [AdminApplicant::class, 'index'])->name('applicants.index');
     Route::get('applicants/{applicant}', [AdminApplicant::class, 'show'])->name('applicants.show');
