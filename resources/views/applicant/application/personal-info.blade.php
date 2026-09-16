@@ -163,4 +163,9 @@
         </form>
     </div>
 </div>
+<style>
+@media(max-width:900px){
+  .form-grid-3 > [style*="grid-column:span 2"]{grid-column:auto !important;}
+}
+</style>
 @endsection
