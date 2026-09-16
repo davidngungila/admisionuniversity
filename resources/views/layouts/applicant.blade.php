@@ -4,6 +4,7 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title','Applicant') — {{ \App\Models\Setting::getValue('university_name','University OAS') }}</title>
+    @include('layouts.partials.favicon')
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -52,7 +53,7 @@
         @media(max-width:1100px){.topbar{padding:0 20px;}}
         @media(max-width:900px){.sidebar{transform:translateX(-100%);width:var(--sidebar-w);}.sidebar.mobile-open{transform:translateX(0);}.main{margin-left:0 !important;}.topbar{flex-wrap:wrap;height:auto;min-height:var(--topbar-h);padding:10px 16px;gap:10px;}}
         @media(max-width:768px){.tb-ay{font-size:13px;}.tb-progress{font-size:11px;padding:5px 10px;}.tb-progress div[style*="width:60px"]{display:none;}}
-        @media(max-width:640px){.view-wrap{padding:16px;}.topbar{padding:8px 14px;gap:8px;}.tb-right{gap:8px;flex-wrap:wrap;justify-content:flex-end;}.tb-profile-text{max-width:110px;overflow:hidden;}.tb-ay{display:none;}.tb-progress{display:none;}}
+        @media(max-width:640px){.view-wrap{padding:16px;}.topbar{padding:8px 14px;gap:8px;}.tb-right{width:100%;gap:8px;flex-wrap:nowrap;justify-content:flex-end;}.tb-profile-text{max-width:110px;overflow:hidden;}.tb-ay{display:none;}.tb-progress{padding:5px 10px;font-size:11px;}}
         @media(max-width:480px){.tb-profile-email{display:none;}}
         .btn{padding:12px 20px;border-radius:8px;border:none;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;}
         .btn-primary{background:var(--terracotta-600);color:#fff;box-shadow:0 6px 16px rgba(194,89,43,.32);}

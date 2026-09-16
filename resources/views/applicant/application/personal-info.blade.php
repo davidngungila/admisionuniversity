@@ -104,7 +104,7 @@
                 </div>
                 <div class="field @error('disability_status') err @enderror" style="grid-column:span 2;">
                     <label class="field-label">Disability</label>
-                    <div style="display:flex;gap:24px;flex-wrap:nowrap;align-items:center;margin-top:6px;">
+                    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;margin-top:6px;">
                         <label class="check-row" style="white-space:nowrap;"><input type="radio" name="disability_status" value="0" @checked(!old('disability_status', $applicant->disability_status))> No Disability</label>
                         <label class="check-row" style="white-space:nowrap;"><input type="radio" name="disability_status" value="1" @checked(old('disability_status', $applicant->disability_status))> Person With Disability</label>
                     </div>

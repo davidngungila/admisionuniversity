@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="grid-2" style="margin-top:16px;grid-template-columns:repeat(2,1fr)">
+                    <div class="grid-2 v-grid2" style="margin-top:16px;grid-template-columns:repeat(2,1fr)">
                         <div>
                             <div class="panel-title" style="font-size:13px;margin-bottom:10px;">Applicant Details</div>
                             <div class="kv">
@@ -202,4 +202,5 @@
         </div>
     @endif
 </div>
+<style>@media(max-width:700px){ .v-grid2{grid-template-columns:1fr !important;} }</style>
 @endsection

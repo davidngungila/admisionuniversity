@@ -59,7 +59,7 @@
             <a href="{{ route('applicant.application.step', [encId($application->id), $steps->firstWhere('route','academic-results')->route]) }}?add=1" onclick="document.getElementById('new-result').scrollIntoView({behavior:'smooth'}); return false;" class="btn btn-ghost btn-sm" style="align-self:flex-start;">+ Add another result</a>
         </div>
     </div>
-    <style>@media(max-width:900px){ div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important} }</style>
+    <style>@media(max-width:900px){ div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important} }@media(max-width:420px){ div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr !important} }</style>
 @endif
 
 <div class="panel" id="new-result">

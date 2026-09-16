@@ -78,7 +78,7 @@
                     </div>
                     <span class="tag tag-gold" style="margin-left:auto">{{ $programme?->code ?? \App\Models\Setting::getValue('university_acronym','UDOM') }}</span>
                 </div>
-                <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="doc-grid2" style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                     <div style="border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--sand-50);">
                         <div style="font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--coffee-700)">1. Documents to Bring — Original + 2 Copies</div>
                         <ul style="margin:8px 0 0 16px;font-size:12.5px;line-height:1.7;color:var(--coffee-800)">
@@ -139,5 +139,6 @@
     body { background:#fff !important; padding-top:0 !important; }
     .p-sticky-header, footer, #toastHost, .udom-fab, .udom-panel, .udom-overlay { display:none !important; }
 }
+@media(max-width:700px){ .doc-grid2{grid-template-columns:1fr !important;} }
 </style>
 @endsection
