@@ -2,26 +2,9 @@
 @section('title','Create Account')
 @section('content')
 <div style="max-width:1100px;margin:0 auto;padding:28px 24px 40px">
-    <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:start;">
-        {{-- Left — info --}}
-        <div>
-            <div style="display:inline-flex;align-items:center;gap:8px;background:var(--terracotta-100);color:var(--terracotta-600);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">{{ \App\Models\Setting::getValue('university_acronym','UDOM') }} Online Admission 2026/2027</div>
-            <h1 style="margin-top:14px;font-size:30px;font-weight:800;line-height:1.1;color:var(--coffee-900);">Create your<br><span style="color:var(--terracotta-600)">admission account</span></h1>
-            <p style="margin-top:10px;color:var(--ink-soft);font-size:14px;line-height:1.6;">Your name is pulled automatically from <b>NECTA</b> using your Form Four index number — no need to type it in.</p>
-            <div class="panel" style="margin-top:18px;">
-                <div class="panel-body" style="display:flex;flex-direction:column;gap:12px;">
-                    <div style="display:flex;gap:12px;align-items:center;"><div class="thumb thumb-coffee" style="width:36px;height:36px">1</div><div><div class="cell-title" style="font-size:13px">Choose your level &amp; entry type</div><div class="cell-sub">Certificate, Diploma, Bachelor, PG Diploma, Master &amp; PhD</div></div></div>
-                    <div style="display:flex;gap:12px;align-items:center;"><div class="thumb thumb-terracotta" style="width:36px;height:36px">2</div><div><div class="cell-title" style="font-size:13px">NECTA verifies your name</div><div class="cell-sub">Matched by index number + first name</div></div></div>
-                    <div style="display:flex;gap:12px;align-items:center;"><div class="thumb thumb-green" style="width:36px;height:36px">3</div><div><div class="cell-title" style="font-size:13px">SMS alerts</div><div class="cell-sub">Get texted when your application is submitted or selected</div></div></div>
-                    <div style="display:flex;gap:12px;align-items:center;"><div class="thumb thumb-gold" style="width:36px;height:36px">4</div><div><div class="cell-title" style="font-size:13px">Secure &amp; verifiable</div><div class="cell-sub">Encrypted IDs and instant public verification of your admission</div></div></div>
-                </div>
-            </div>
-            <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
-                <span class="tag tag-green">6 Study Levels</span><span class="tag tag-gold">{{ \App\Models\Programme::count() }}+ Programmes</span><span class="tag tag-blue">Africa/Dar_es_Salaam</span>
-            </div>
-        </div>
+    <div style="max-width:520px;margin:0 auto;">
 
-        {{-- Right — registration wizard --}}
+        {{-- Registration wizard --}}
         <div class="panel">
             <div class="panel-head">
                 <div>
