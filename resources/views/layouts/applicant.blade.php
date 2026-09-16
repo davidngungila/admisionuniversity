@@ -96,7 +96,7 @@
                     @endphp
                     @if($locked)
                         <div class="sb-item locked" style="cursor:not-allowed;opacity:.5;pointer-events:none;">
-                            <span class="dot">{{ $done ? '✓' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' }}</span>
+                            <span class="dot">{!! $done ? '✓' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' !!}</span>
                             <span>{{ $st->step_name }}</span>
                         </div>
                     @else
