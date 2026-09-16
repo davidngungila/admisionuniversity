@@ -12,7 +12,55 @@
 
     $identityKeys = ['university_name','university_acronym','university_logo'];
     $smsKeys = ['sms_enabled','sms_provider','sms_sender_id','sms_api_key','sms_test_mode'];
-    $otherSettings = $settings->filter(fn($s)=> !in_array($s->key, array_merge($identityKeys,$smsKeys)));
+    $integrationGroups = ['gepg','necta','nactvet','tcu'];
+    $otherSettings = $settings->filter(fn($s)=> !in_array($s->key, array_merge($identityKeys,$smsKeys)) && !in_array($s->group, $integrationGroups));
+
+    $sel = fn($k)=>$settings->search(fn($x)=>$x->key===$k);
+    $ival = function($k,$def='') use($settings,$sel){ $i=$sel($k); return $i!==false ? $settings[$i]->value : $def; };
+    $idx = fn($k)=>($sel($k)!==false ? $sel($k) : $settings->count());
+
+    $gepgFields = [
+        ['key'=>'gepg_enabled','label'=>'Enable GePG','type'=>'select','options'=>['1'=>'Enabled — generate control numbers via GePG','0'=>'Disabled — manual control number entry'],'hint'=>'Master switch for the GePG billing gateway.'],
+        ['key'=>'gepg_test_mode','label'=>'Test Mode','type'=>'select','options'=>['1'=>'Sandbox / test environment','0'=>'Production'],'hint'=>'Always use Sandbox until GePG confirms your credentials are live.'],
+        ['key'=>'gepg_biller_code','label'=>'Biller Code *','type'=>'text','placeholder'=>'e.g. MoCU','hint'=>'GePG Biller Code issued to the university (BIL PAY service).'],
+        ['key'=>'gepg_sp_system_code','label'=>'SP System Code *','type'=>'text','placeholder'=>'SP123','hint'=>'Service provider system code used when requesting a bill.'],
+        ['key'=>'gepg_psp_username','label'=>'PSP Username *','type'=>'text','placeholder'=>'','hint'=>'Web-service username issued by GePG to the PSP.'],
+        ['key'=>'gepg_psp_password','label'=>'PSP Password *','type'=>'password','placeholder'=>'••••••••','hint'=>'Web-service password issued by GePG to the PSP.'],
+        ['key'=>'gepg_test_url','label'=>'Sandbox Endpoint','type'=>'text','placeholder'=>'https://gfs.tegov.go.tz/gfs_billrequest','hint'=>'Bill-request SOAP endpoint for GePG sandbox.'],
+        ['key'=>'gepg_production_url','label'=>'Production Endpoint','type'=>'text','placeholder'=>'https://gfs.gepg.go.tz/gfs_billrequest','hint'=>'Bill-request SOAP endpoint for GePG production.'],
+        ['key'=>'gepg_currency','label'=>'Currency','type'=>'text','placeholder'=>'TZS','full'=>true,'hint'=>'ISO currency code for generated control numbers (TZS).'],
+        ['key'=>'gepg_bill_payment_window','label'=>'Payment Window (hours)','type'=>'text','placeholder'=>'240','hint'=>'How long a generated control number stays valid before expiry.'],
+        ['key'=>'gepg_psp_certificate','label'=>'PSP Certificate / Public Key','type'=>'textarea','full'=>true,'hint'=>'Paste the GePG PSP certificate or public key (PEM) used to encrypt/sign bill request payloads.'],
+    ];
+
+    $nectaFields = [
+        ['key'=>'necta_enabled','label'=>'Enable Verification','type'=>'select','options'=>['1'=>'Enabled — verify results via NECTA API','0'=>'Disabled'],'hint'=>'Master switch for NECTA O/A-Level result checks.'],
+        ['key'=>'necta_test_mode','label'=>'Test Mode','type'=>'select','options'=>['1'=>'Test / staging API','0'=>'Production API'],'hint'=>'Keep enabled until the integration is signed off.'],
+        ['key'=>'necta_base_url','label'=>'Base URL *','type'=>'text','placeholder'=>'https://ws.necta.go.tz','full'=>true,'hint'=>'NECTA web-service base endpoint.'],
+        ['key'=>'necta_api_token','label'=>'API Token *','type'=>'password','placeholder'=>'token','full'=>true,'hint'=>'Token / credentials for the NECTA verification endpoint.'],
+    ];
+
+    $nactvetFields = [
+        ['key'=>'nactvet_enabled','label'=>'Enable Verification','type'=>'select','options'=>['1'=>'Enabled — verify results via NACTVET API','0'=>'Disabled'],'hint'=>'Master switch for NACTVET (VETA) result checks.'],
+        ['key'=>'nactvet_test_mode','label'=>'Test Mode','type'=>'select','options'=>['1'=>'Test / staging API','0'=>'Production API'],'hint'=>'Keep enabled until the integration is signed off.'],
+        ['key'=>'nactvet_base_url','label'=>'Base URL *','type'=>'text','placeholder'=>'https://ws.nactvet.go.tz','full'=>true,'hint'=>'NACTVET web-service base endpoint.'],
+        ['key'=>'nactvet_api_token','label'=>'API Token *','type'=>'password','placeholder'=>'token','full'=>true,'hint'=>'Token / credentials for the NACTVET verification endpoint.'],
+    ];
+
+    $tcuFields = [
+        ['key'=>'tcu_enabled','label'=>'Enable Integration','type'=>'select','options'=>['1'=>'Enabled — query TCU records','0'=>'Disabled'],'hint'=>'Master switch for the TCU integration.'],
+        ['key'=>'tcu_test_mode','label'=>'Test Mode','type'=>'select','options'=>['1'=>'Test / staging API','0'=>'Production API'],'hint'=>'Keep enabled until the integration is signed off.'],
+        ['key'=>'tcu_system_code','label'=>'System Code *','type'=>'text','placeholder'=>'','hint'=>'TCU system code identifying this university.'],
+        ['key'=>'tcu_base_url','label'=>'Base URL *','type'=>'text','placeholder'=>'https://www.tcu.go.tz','full'=>true,'hint'=>'TCU web-service base endpoint.'],
+        ['key'=>'tcu_api_token','label'=>'API Token *','type'=>'password','placeholder'=>'token','full'=>true,'hint'=>'Token / credentials for the TCU endpoint.'],
+    ];
+
+    $integrationTabs = [
+        ['id'=>'tab-gepg','tab'=>'GePG','title'=>'GePG Payment Gateway','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>','desc'=>'Government ePayment Gateway — generate and reconcile payment control numbers in real time.','fields'=>$gepgFields],
+        ['id'=>'tab-necta','tab'=>'NECTA','title'=>'NECTA Verification','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>','desc'=>'National Examinations Council of Tanzania — verify O-Level and A-Level results.','fields'=>$nectaFields],
+        ['id'=>'tab-nactvet','tab'=>'NACTVET','title'=>'NACTVET Verification','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>','desc'=>'National Council for Technical and Vocational Education — verify diploma and certificate results.','fields'=>$nactvetFields],
+        ['id'=>'tab-tcu','tab'=>'TCU','title'=>'TCU Integration','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>','desc'=>'Tanzania Commission for Universities — verify higher-education records and credentials.','fields'=>$tcuFields],
+    ];
 @endphp
 
 {{-- Tabbed layout --}}
@@ -29,6 +77,9 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                 SMS Notifications
             </button>
+            @foreach($integrationTabs as $it)
+            <button type="button" class="settings-tab" onclick="switchTab(this,'{{ $it['id'] }}')">{!! $it['icon'] !!} {{ $it['tab'] }}</button>
+            @endforeach
             <button type="button" class="settings-tab" onclick="switchTab(this,'tab-general')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33"/></svg>
                 General Settings
