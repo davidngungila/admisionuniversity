@@ -554,10 +554,10 @@ class ApplicationController extends Controller
             }
             $payload = ['index_number' => $validated['index_number'], 'exam_year' => $validated['exam_year'] ?? null];
         } elseif ($type === 'Certificate') {
-            if (empty($validated['registration_number']) || empty($validated['exam_year'])) {
-                return response()->json(['ok' => false, 'error' => 'Enter your NACTVET registration number and year of graduation.'], 422);
+            if (empty($validated['registration_number'])) {
+                return response()->json(['ok' => false, 'error' => 'Enter your NACTVET registration number to fetch your results.'], 422);
             }
-            $payload = ['registration_number' => $validated['registration_number'], 'exam_year' => $validated['exam_year']];
+            $payload = ['registration_number' => $validated['registration_number'], 'exam_year' => $validated['exam_year'] ?? null];
         } else {
             if (empty($validated['avn_number'])) {
                 return response()->json(['ok' => false, 'error' => 'Enter your AVN number to fetch your diploma results.'], 422);

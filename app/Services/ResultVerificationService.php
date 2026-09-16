@@ -42,7 +42,7 @@ class ResultVerificationService
      *
      * @param array $payload keys vary by exam type:
      *               O-Level/A-Level: index_number, exam_year
-     *               Certificate:     registration_number, exam_year
+     *               Certificate:     registration_number, exam_year (optional)
      *               Diploma:         avn_number
      * @return array normalized, always includes `ok`
      */
