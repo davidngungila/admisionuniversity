@@ -43,7 +43,7 @@
                                 <div style="font-weight:700;font-size:13.5px;color:var(--coffee-900);">{{ $r->exam_type }} — {{ $r->index_number }} ({{ $r->exam_year }})</div>
                                 <div class="field-hint">{{ $r->school_name }}</div>
                             </div>
-                            <span class="tag {{ $r->is_verified ? 'tag-green' : 'tag-grey' }}">{{ $r->is_verified ? 'Verified' : 'Pending verification' }}</span>
+                            <span class="tag {{ $r->is_verified ? (str_ends_with($r->exam_body ?? '', '(BYPASSED)') ? 'tag-gold' : 'tag-green') : 'tag-grey' }}">{{ $r->is_verified ? (str_ends_with($r->exam_body ?? '', '(BYPASSED)') ? 'Verified (BYPASSED)' : 'Verified') : 'Pending verification' }}</span>
                         </div>
                         <div class="ar-results-grid" style="display:grid;gap:8px;margin-top:10px;">
                             @foreach(($r->results ?? []) as $subj)

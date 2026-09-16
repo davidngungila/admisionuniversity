@@ -469,9 +469,26 @@ class ApplicationController extends Controller
                 $fetched = $verify->verify($examType, $payload);
 
                 if (empty($fetched['ok']) || empty($fetched['subjects'])) {
-                    throw \Illuminate\Validation\ValidationException::withMessages([
-                        'results.'.$key.'.index_number' => 'We could not verify this result with '.$provider.'. Please re-fetch from the official source and try again.',
+                    // Provider unavailable or disabled — bypass and treat the entered details as correct.
+                    $passes = collect($item['subjects'])
+                        ->filter(fn ($s) => in_array(strtoupper($s['grade']), ['A', 'B', 'C', 'D', 'E'], true))
+                        ->count();
+
+                    AcademicResult::create([
+                        'application_id'  => $application->id,
+                        'exam_type'       => $examType,
+                        'exam_body'       => $provider.' (BYPASSED)',
+                        'index_number'    => $identifier,
+                        'exam_year'       => $year,
+                        'school_name'     => $item['school_name'] ?? null,
+                        'results'         => $item['subjects'],
+                        'total_subjects'  => count($item['subjects']),
+                        'passes_count'    => $passes,
+                        'overall_grade'   => $this->overallGrade($item['subjects']),
+                        'is_verified'     => true,
+                        'verified_at'     => now(),
                     ]);
+                    continue;
                 }
 
                 if ($this->normalizeSubjects($item['subjects']) !== $this->normalizeSubjects($fetched['subjects'])) {
