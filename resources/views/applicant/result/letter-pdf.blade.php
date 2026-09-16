@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <style>
 @page { margin: 20mm 15mm 20mm 25mm; }
-body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; color: #2A1B10; border-left: 3px solid #C2592B; padding-left: 12px; }
-.header { text-align: center; border-bottom: 3px double #2A1B10; padding-bottom: 12px; }
+body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; color: #07364F; border-left: 3px solid #C2592B; padding-left: 12px; }
+.header { text-align: center; border-bottom: 3px double #07364F; padding-bottom: 12px; }
 .logo { width: 50px; height: 50px; background: #C2592B; color: #fff; display: inline-block; text-align: center; line-height: 50px; font-weight: 800; border-radius: 10px; }
 .meta { margin-top: 12px; font-size: 9pt; }
 .meta table { width: 100%; }
@@ -14,7 +14,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
 .details td { padding: 7px 10px; border-bottom: 1px solid #E4D7C2; }
 .details tr:last-child td { border-bottom: none; }
 .k { color: #6B5A48; font-weight: 600; width: 38%; background: #FBF7EF; }
-.v { color: #2A1B10; font-weight: 700; }
+.v { color: #07364F; font-weight: 700; }
 .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 8pt; font-weight: 700; }
 </style>
 </head>
@@ -48,7 +48,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
   <div style="text-align:center; margin-top:8px; font-weight:800; font-size:10pt; border:1px solid #E4D7C2; background:#FBF7EF; padding:6px; border-radius:6px;">RE: ADMISSION TO {{ strtoupper(\App\Models\Setting::getValue('university_name','University of Dodoma')) }} &mdash; {{ $application->academicYear->name }}</div>
   <p style="text-align:justify; margin-top:10px;">We are pleased to inform you that you have been <strong>selected</strong> to join the {{ \App\Models\Setting::getValue('university_name','University of Dodoma') }} for the <strong>{{ $application->academicYear->name }}</strong> academic year as detailed below. Congratulations and welcome to the {{ \App\Models\Setting::getValue('university_acronym','UDOM') }} family!</p>
   <div class="details">
-    <div style="background:#2A1B10; color:#fff; padding:7px 10px; font-weight:700; font-size:9pt; letter-spacing:0.5px;">ADMISSION DETAILS</div>
+    <div style="background:#07364F; color:#fff; padding:7px 10px; font-weight:700; font-size:9pt; letter-spacing:0.5px;">ADMISSION DETAILS</div>
     <table>
       <tr><td class="k">Full Name</td><td class="v">{{ $fullName }} ({{ $applicant->gender }})</td></tr>
       <tr><td class="k">Date of Birth / NIDA</td><td>{{ $applicant->date_of_birth?->format('d M Y') ?? '—' }} &middot; {{ $applicant->nida_number ?? '—' }}</td></tr>
@@ -70,7 +70,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
           @if($sig->signature_image && file_exists(public_path($sig->signature_image)))
             <img src="{{ public_path($sig->signature_image) }}" style="height:42px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
           @else
-            <div style="height:42px; border-bottom:1px solid #2A1B10; margin:14px 0 4px;"></div>
+            <div style="height:42px; border-bottom:1px solid #07364F; margin:14px 0 4px;"></div>
           @endif
           <div style="font-weight:800;">For: {{ $sig->title ? $sig->title.' ' : '' }}{{ $sig->name }}</div>
           <div style="font-size:8pt; color:#6B5A48;">{{ $sig->designation ?? '' }}<br>{{ $letter->issued_at?->format('d F Y') ?? $letter->created_at->format('d F Y') }}</div>
@@ -80,7 +80,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
   @else
     <div style="margin-top:16px; display:flex; justify-content:space-between; font-size:9pt;">
       <div>Wishing you success.<br><strong>For: Vice Chancellor</strong><br>{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}</div>
-      <div style="text-align:center;"><div style="width:100px; height:1px; background:#2A1B10; margin:24px auto 4px;"></div>Registrar &mdash; Academic<br>{{ $letter->issued_at?->format('d F Y') ?? $letter->created_at->format('d F Y') }}</div>
+      <div style="text-align:center;"><div style="width:100px; height:1px; background:#07364F; margin:24px auto 4px;"></div>Registrar &mdash; Academic<br>{{ $letter->issued_at?->format('d F Y') ?? $letter->created_at->format('d F Y') }}</div>
     </div>
   @endif
   <div style="margin-top:16px; border-top:1px dashed #E4D7C2; padding-top:6px; font-size:7.5pt; color:#6B5A48;">System-generated valid without signature when verified at {{ url('/verify-admission') }} &middot; Ref: {{ $letter->letter_number }} &middot; {{ $application->application_number }}</div>

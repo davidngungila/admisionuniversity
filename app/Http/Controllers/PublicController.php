@@ -85,9 +85,17 @@ class PublicController extends Controller
 
     public function programmeShow(Programme $programme)
     {
-        $programme->load(['admissionLevel', 'campus', 'department.faculty', 'requirements']);
+        $programme->load([
+            'admissionLevel',
+            'campus',
+            'department.faculty',
+            'requirements',
+            'courses',
+        ]);
 
-        return view('public.programmes.show', compact('programme'));
+        $curriculum = $programme->curriculum();
+
+        return view('public.programmes.show', compact('programme', 'curriculum'));
     }
 
     public function requirements()

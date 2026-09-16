@@ -12,12 +12,12 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root{
-            --sand-50:#FBF7EF;--sand-100:#F4ECDC;--sand-200:#E9DCC0;
-            --coffee-900:#2A1B10;--coffee-800:#3B2718;--coffee-700:#4D3422;--coffee-500:#7A5C42;--coffee-300:#A98968;
-            --terracotta-600:#C2592B;--terracotta-500:#D06B3A;--terracotta-100:#F6E1D3;
-            --acacia-600:#5E6E3F;--acacia-500:#7A8450;--acacia-100:#E2E7D4;
-            --gold-500:#D4A24C;--gold-100:#F7E9CB;
-            --ink:#241408;--ink-soft:#6B5A48;--line:#E4D7C2;--white:#FFFFFF;
+            --sand-50:#F5F8FC;--sand-100:#ECF1F6;--sand-200:#DCE5EE;
+            --coffee-900:#052B3D;--coffee-800:#07364F;--coffee-700:#0A4260;--coffee-500:#285B78;--coffee-300:#5E88A3;
+            --terracotta-600:#0066CC;--terracotta-500:#1B80E0;--terracotta-100:#E4F0FA;
+            --acacia-600:#2E7D6B;--acacia-500:#3E8F7C;--acacia-100:#E1EFEA;
+            --gold-500:#E8B82F;--gold-100:#F9EFD2;
+            --ink:#052C3F;--ink-soft:#40637A;--line:#C9D6E2;--white:#FFFFFF;
             --danger:#B33A3A;--danger-100:#F6DCDA;--success:#3F6B3F;
             --radius-sm:8px;--radius-md:14px;--radius-lg:20px;
             --shadow-sm:0 1px 2px rgba(42,27,16,.08);--shadow-md:0 8px 24px rgba(42,27,16,.10);--shadow-lg:0 20px 48px rgba(42,27,16,.18);

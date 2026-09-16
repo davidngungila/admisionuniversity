@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <style>
 @page { margin: 20mm 15mm 20mm 25mm; }
-body { font-family: DejaVu Sans, sans-serif; font-size: 9.5pt; line-height: 1.6; color: #2A1B10; border-left: 3px solid #5E6E3F; padding-left: 12px; }
-.header { text-align: center; border-bottom: 3px double #2A1B10; padding-bottom: 10px; }
+body { font-family: DejaVu Sans, sans-serif; font-size: 9.5pt; line-height: 1.6; color: #07364F; border-left: 3px solid #5E6E3F; padding-left: 12px; }
+.header { text-align: center; border-bottom: 3px double #07364F; padding-bottom: 10px; }
 .logo { width: 50px; height: 50px; background: #C2592B; color: #fff; display: inline-block; text-align: center; line-height: 50px; font-weight: 800; border-radius: 10px; }
 .card { border: 1px solid #E4D7C2; border-radius: 8px; padding: 10px; background: #FBF7EF; margin-top: 10px; }
 </style>
@@ -24,7 +24,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 9.5pt; line-height: 1.6;
   @endif
   <div style="font-weight:800; font-size:13pt; margin-top:4px;">{{ strtoupper(\App\Models\Setting::getValue('university_name','University of Dodoma')) }}</div>
   <div style="font-size:7pt; letter-spacing:0.8px; color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name','University') }} &middot; {{ \App\Models\Setting::getValue('admissions_office','Directorate of Undergraduate Studies') }}</div>
-  <div style="margin-top:6px; background:#2A1B10; color:#D4A24C; display:inline-block; padding:4px 12px; border-radius:12px; font-size:7pt; font-weight:800;">JOINING INSTRUCTIONS &mdash; {{ $application->academicYear->name }}</div>
+  <div style="margin-top:6px; background:#07364F; color:#E8B82F; display:inline-block; padding:4px 12px; border-radius:12px; font-size:7pt; font-weight:800;">JOINING INSTRUCTIONS &mdash; {{ $application->academicYear->name }}</div>
 </div>
 <div style="margin-top:10px; font-size:9pt;">
   <table width="100%"><tr>
@@ -59,7 +59,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 9.5pt; line-height: 1.6;
   <strong>4. Accommodation, Health &amp; Conduct</strong><br>
   Hostel via {{ \App\Models\Setting::getValue('university_acronym','UDOM') }} accommodation portal &middot; Adhere to {{ \App\Models\Setting::getValue('university_acronym','UDOM') }} rules &middot; Dress code as per handbook &middot; Medical exam at Health Centre
 </div>
-<div style="margin-top:12px; background:#F6E1D3; border:1px solid #E4D7C2; padding:8px; border-radius:6px; font-size:8.5pt; color:#C2592B;"><strong>Note:</strong> Failure to report on time may lead to forfeiture. Contact {{ \App\Models\Setting::getValue('admissions_email') ?? 'admissions@university.ac.tz' }} &middot; {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }}</div>
+<div style="margin-top:12px; background:#E4F0FA; border:1px solid #E4D7C2; padding:8px; border-radius:6px; font-size:8.5pt; color:#C2592B;"><strong>Note:</strong> Failure to report on time may lead to forfeiture. Contact {{ \App\Models\Setting::getValue('admissions_email') ?? 'admissions@university.ac.tz' }} &middot; {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }}</div>
   @php $joinSignatories = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->get(); @endphp
   @if($joinSignatories->count())
     <div style="margin-top:14px; display:flex; justify-content:space-between; gap:18px; font-size:8.5pt;">
@@ -68,7 +68,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 9.5pt; line-height: 1.6;
           @if($sig->signature_image && file_exists(public_path($sig->signature_image)))
             <img src="{{ public_path($sig->signature_image) }}" style="height:38px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
           @else
-            <div style="height:38px; border-bottom:1px solid #2A1B10; margin:10px 0 4px;"></div>
+            <div style="height:38px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
           @endif
           <div style="font-weight:800;">{{ $sig->title ? $sig->title.' ' : '' }}{{ $sig->name }}</div>
           <div style="color:#6B5A48;">{{ $sig->designation ?? '' }}</div>
