@@ -6,7 +6,7 @@
     <div style="margin-top:28px;" class="panel">
         <div class="panel-body" style="text-align:center;padding:32px 24px;">
             <div style="display:inline-flex;align-items:center;gap:8px;background:var(--terracotta-100);color:var(--terracotta-600);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Welcome to {{ \App\Models\Setting::getValue('university_acronym','UDOM') }} Online Application System</div>
-            <h2 style="margin-top:14px;font-size:22px;font-weight:800;color:var(--coffee-900);">Your gateway to academic excellence at the University of Dodoma</h2>
+            <h2 style="margin-top:14px;font-size:22px;font-weight:800;color:var(--coffee-900);">Your gateway to academic excellence at {{ \App\Models\Setting::getValue('university_name','the University of Dodoma') }}</h2>
             <p style="margin-top:10px;color:var(--ink-soft);font-size:14px;line-height:1.6;max-width:640px;margin-left:auto;margin-right:auto;">Join a thriving academic community with exceptional opportunities, modern facilities and supportive learning environment.</p>
             <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;text-align:left;">
                 <div style="border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--sand-50);"><div style="font-weight:800;color:var(--coffee-900);">Application Process</div><div class="cell-sub" style="margin-top:4px;">Simple and straightforward application process. Create an account, fill in your details, select your preferred programme, and submit your application online.</div></div>
