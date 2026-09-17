@@ -18,19 +18,19 @@
         <span class="tag tag-green">You: {{ count($myAppWindowIds) }} applied</span>
     </div>
     <div class="panel-body" style="padding:0;">
-        <div style="position:relative;padding:18px 18px 18px 36px;">
-            <div style="position:absolute;left:22px;top:18px;bottom:18px;width:2px;background:var(--line);border-radius:2px;"></div>
+        <div class="cal-timeline" style="position:relative;padding:18px 18px 18px 36px;">
+            <div class="cal-line" style="position:absolute;left:22px;top:18px;bottom:18px;width:2px;background:var(--line);border-radius:2px;"></div>
             @forelse($windows as $w)
                 @php $isMine = in_array($w->id, $myAppWindowIds); $status=$w->statusLabel(); $dotColor = $status==='OPEN' ? 'var(--acacia-600)' : ($status==='CLOSING SOON' ? 'var(--gold-500)' : ($status==='CLOSED' ? 'var(--danger)' : 'var(--terracotta-600)')); @endphp
-                <div style="position:relative;display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;">
-                    <div style="position:absolute;left:-14px;top:14px;width:12px;height:12px;border-radius:50%;background:{{ $dotColor }};border:2px solid #fff;box-shadow:0 0 0 2px {{ $dotColor }};flex:none;"></div>
-                    <div class="panel" style="flex:1;margin:0;@if($isMine)border:1.5px solid var(--acacia-600);box-shadow:0 4px 16px rgba(94,110,63,.12);@endif">
-                        <div class="panel-body" style="padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
+                <div class="cal-item" style="position:relative;display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;">
+                    <div class="cal-dot" style="position:absolute;left:-14px;top:14px;width:12px;height:12px;border-radius:50%;background:{{ $dotColor }};border:2px solid #fff;box-shadow:0 0 0 2px {{ $dotColor }};flex:none;"></div>
+                    <div class="panel cal-card" style="flex:1;margin:0;@if($isMine)border:1.5px solid var(--acacia-600);box-shadow:0 4px 16px rgba(94,110,63,.12);@endif">
+                        <div class="cal-card-body" style="padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
                             <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1;">
                                 <div class="thumb {{ $isMine ? 'thumb-green' : 'thumb-grey' }}" style="width:42px;height:42px;">{{ strtoupper(substr($w->admissionLevel->short_name,0,1)) }}</div>
                                 <div style="min-width:0;flex:1;">
-                                    <div style="font-weight:800;color:var(--coffee-900);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $w->admissionLevel->name }} · Round {{ $w->applicationRound->round_number }} @if($isMine)<span class="tag tag-green" style="margin-left:6px">Yours</span>@endif</div>
-                                    <div style="font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $w->academicYear->name }} · {{ $w->applicant_category }} · {{ $w->opens_at->format('d M Y') }} → {{ $w->closes_at->format('d M Y') }}</div>
+                                    <div class="cal-title" style="font-weight:800;color:var(--coffee-900);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $w->admissionLevel->name }} · Round {{ $w->applicationRound->round_number }} @if($isMine)<span class="tag tag-green" style="margin-left:6px">Yours</span>@endif</div>
+                                    <div class="cal-sub" style="font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $w->academicYear->name }} · {{ $w->applicant_category }} · {{ $w->opens_at->format('d M Y') }} → {{ $w->closes_at->format('d M Y') }}</div>
                                     <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                                         @if($status==='OPEN')<span class="tag tag-green">OPEN</span>@elseif($status==='CLOSING SOON')<span class="tag tag-gold">CLOSING SOON</span>@elseif($status==='CLOSED')<span class="tag tag-red">CLOSED</span>@else<span class="tag tag-blue">UPCOMING</span>@endif
                                         <span class="tag tag-grey">{{ $w->feeLabel() }}</span>
@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="display:flex;gap:8px;align-items:center;flex:none;">
+                            <div class="cal-actions" style="display:flex;gap:8px;align-items:center;flex:none;">
                                 @if($w->isOpen() && !$isMine && in_array($w->academic_year_id, $myAppYearIds, true))
                                     <button type="button" disabled title="Only one application per academic year is allowed. You already applied in {{ $w->academicYear->name }}." style="background:var(--sand-200);color:var(--ink-soft);border:none;padding:8px 14px;border-radius:8px;font-weight:600;font-size:13px;cursor:not-allowed;opacity:.7;">Year applied — Closed</button>
                                 @elseif($w->isOpen() && !$isMine)
@@ -60,4 +60,30 @@
         </div>
     </div>
 </div>
+<style>
+@media(max-width:900px){
+  .page-head{flex-direction:column;align-items:flex-start;gap:12px;}
+  .page-actions{width:100%;}
+  .cal-timeline{padding:14px 12px 14px 28px !important;}
+  .cal-line{left:14px !important;}
+  .cal-dot{left:-10px !important;width:10px !important;height:10px !important;top:16px !important;}
+}
+@media(max-width:640px){
+  .cal-timeline{padding:12px 10px 12px 24px !important;}
+  .cal-line{left:11px !important;}
+  .cal-dot{left:-9px !important;}
+  .cal-card-body{flex-direction:column !important;align-items:flex-start !important;padding:12px !important;}
+  .cal-title,.cal-sub{white-space:normal !important;overflow:visible !important;text-overflow:clip !important;}
+  .cal-actions{width:100%;justify-content:flex-start;}
+  .cal-actions .btn{width:100%;justify-content:center;}
+  .cal-actions button[disabled]{width:100%;text-align:center;}
+  .thumb{width:36px !important;height:36px !important;}
+  .panel-head{flex-direction:column;align-items:flex-start;gap:8px;}
+}
+@media(max-width:480px){
+  .view-wrap{padding:12px !important;}
+  .page-head h1{font-size:22px !important;}
+  .cal-card{border-radius:12px !important;}
+}
+</style>
 @endsection
