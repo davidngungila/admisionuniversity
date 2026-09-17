@@ -98,25 +98,28 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 8.5pt; line-height: 1.5;
   </table>
 </div>
 
-@php $batchSignatories = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->get(); @endphp
-@if($batchSignatories->count())
+@php $activeSignatory = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->first(); @endphp
+@if($activeSignatory)
   <div style="margin-top:18px; display:flex; justify-content:space-between; gap:18px; font-size:8.5pt;">
-    @foreach($batchSignatories as $sig)
-      <div style="flex:1; text-align:center; max-width:48%;">
-        @if($sig->signature_image && file_exists(public_path($sig->signature_image)))
-          <img src="{{ public_path($sig->signature_image) }}" style="height:36px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
-        @else
-          <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
-        @endif
-        <div style="font-weight:800;">{{ $sig->title ? $sig->title.' ' : '' }}{{ $sig->name }}</div>
-        <div style="font-size:7pt; color:#6B5A48;">{{ $sig->designation ?? '' }}<br>{{ now()->format('d F Y') }}</div>
-      </div>
-    @endforeach
+    <div style="flex:1; text-align:center; max-width:48%;">
+      <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+      <div style="font-weight:800;">For: Vice Chancellor</div>
+      <div style="font-size:7pt; color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}<br>17 September 2026</div>
+    </div>
+    <div style="flex:1; text-align:center; max-width:48%;">
+      @if($activeSignatory->signature_image && file_exists(public_path($activeSignatory->signature_image)))
+        <img src="{{ public_path($activeSignatory->signature_image) }}" style="height:36px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
+      @else
+        <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+      @endif
+      <div style="font-weight:800;">For: {{ $activeSignatory->title ? $activeSignatory->title.' ' : '' }}{{ $activeSignatory->name }}</div>
+      <div style="font-size:7pt; color:#6B5A48;">{{ $activeSignatory->designation ?: 'Registrar — Academic' }}<br>17 September 2026</div>
+    </div>
   </div>
 @else
   <div style="margin-top:18px; display:flex; justify-content:space-between; font-size:8.5pt; color:#07364F;">
     <div>Prepared by: Admissions Office<br><strong>{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}</strong></div>
-    <div style="text-align:center;"><div style="width:110px; height:1px; background:#07364F; margin:22px auto 4px;"></div>Registrar &mdash; Academic<br>{{ now()->format('d F Y') }}</div>
+    <div style="text-align:center;"><div style="width:110px; height:1px; background:#07364F; margin:22px auto 4px;"></div>Registrar &mdash; Academic<br>17 September 2026</div>
   </div>
 @endif
 

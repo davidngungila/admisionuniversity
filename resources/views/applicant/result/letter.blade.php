@@ -137,16 +137,22 @@
             </div>
 
             {{-- Signature --}}
+            @php $activeSignatory = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->first(); @endphp
             <div style="margin-top:28px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;">
                 <div style="font-size:12px;color:var(--ink-soft);">
                     <div>Wishing you a successful academic journey.</div>
                     <div style="margin-top:18px;font-weight:700;color:var(--coffee-900);">For: Vice Chancellor</div>
                     <div>{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}</div>
                 </div>
-                <div style="text-align:center;">
-                    <div style="width:120px;height:1px;background:var(--coffee-900);margin:32px auto 6px;"></div>
-                    <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--coffee-700)">Registrar — Academic</div>
-                    <div style="font-size:11px;color:var(--ink-soft)">{{ $letter->issued_at?->format('d F Y') ?? $letter->created_at->format('d F Y') }}</div>
+                <div style="text-align:center;min-width:160px;">
+                    @if($activeSignatory && $activeSignatory->signature_image && file_exists(public_path($activeSignatory->signature_image)))
+                        <img src="{{ asset($activeSignatory->signature_image) }}" style="height:42px;object-fit:contain;margin:0 auto 6px;display:block;" alt="Signature">
+                    @else
+                        <div style="width:120px;height:1px;background:var(--coffee-900);margin:32px auto 6px;"></div>
+                    @endif
+                    <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--coffee-700)">{{ $activeSignatory->designation ?? 'Registrar — Academic' }}</div>
+                    @if($activeSignatory)<div style="font-size:11px;font-weight:700;color:var(--coffee-900);">{{ $activeSignatory->title ? $activeSignatory->title.' ' : '' }}{{ $activeSignatory->name }}</div>@endif
+                    <div style="font-size:11px;color:var(--ink-soft)">17 September 2026</div>
                 </div>
             </div>
 

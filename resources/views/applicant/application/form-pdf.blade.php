@@ -122,20 +122,36 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 9pt; line-height: 1.55; 
   <strong>Declaration:</strong> I declare that the information provided is true and correct. I understand that false information may lead to disqualification. Submitted on {{ $application->submitted_at ? \Carbon\Carbon::parse($application->submitted_at)->format('d F Y H:i') : '—' }} via the Online Admission System.
 </div>
 
-@php $formSignatories = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->get(); @endphp
-@if($formSignatories->count())
+@php $activeSignatory = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->first(); @endphp
+@if($activeSignatory)
   <div style="margin-top:16px; display:flex; justify-content:space-between; gap:18px; font-size:8pt;">
-    @foreach($formSignatories as $sig)
-      <div style="flex:1; text-align:center; max-width:48%;">
-        @if($sig->signature_image && file_exists(public_path($sig->signature_image)))
-          <img src="{{ public_path($sig->signature_image) }}" style="height:36px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
-        @else
-          <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
-        @endif
-        <div style="font-weight:800;">{{ $sig->title ? $sig->title.' ' : '' }}{{ $sig->name }}</div>
-        <div style="color:#6B5A48;">{{ $sig->designation ?? '' }}</div>
-      </div>
-    @endforeach
+    <div style="flex:1; text-align:center; max-width:48%;">
+      <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+      <div style="font-weight:800;">For: Vice Chancellor</div>
+      <div style="color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}<br>17 September 2026</div>
+    </div>
+    <div style="flex:1; text-align:center; max-width:48%;">
+      @if($activeSignatory->signature_image && file_exists(public_path($activeSignatory->signature_image)))
+        <img src="{{ public_path($activeSignatory->signature_image) }}" style="height:36px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
+      @else
+        <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+      @endif
+      <div style="font-weight:800;">For: {{ $activeSignatory->title ? $activeSignatory->title.' ' : '' }}{{ $activeSignatory->name }}</div>
+      <div style="color:#6B5A48;">{{ $activeSignatory->designation ?: 'Registrar — Academic' }}<br>17 September 2026</div>
+    </div>
+  </div>
+@else
+  <div style="margin-top:16px; display:flex; justify-content:space-between; gap:18px; font-size:8pt;">
+    <div style="flex:1; text-align:center; max-width:48%;">
+      <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+      <div style="font-weight:800;">For: Vice Chancellor</div>
+      <div style="color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}<br>17 September 2026</div>
+    </div>
+    <div style="flex:1; text-align:center; max-width:48%;">
+      <div style="height:36px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+      <div style="font-weight:800;">Registrar — Academic</div>
+      <div style="color:#6B5A48;">17 September 2026</div>
+    </div>
   </div>
 @endif
 

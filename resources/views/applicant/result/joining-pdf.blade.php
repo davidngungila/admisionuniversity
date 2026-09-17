@@ -60,20 +60,36 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 9.5pt; line-height: 1.6;
   Hostel via {{ \App\Models\Setting::getValue('university_acronym','UDOM') }} accommodation portal &middot; Adhere to {{ \App\Models\Setting::getValue('university_acronym','UDOM') }} rules &middot; Dress code as per handbook &middot; Medical exam at Health Centre
 </div>
 <div style="margin-top:12px; background:#E4F0FA; border:1px solid #E4D7C2; padding:8px; border-radius:6px; font-size:8.5pt; color:#C2592B;"><strong>Note:</strong> Failure to report on time may lead to forfeiture. Contact {{ \App\Models\Setting::getValue('admissions_email') ?? 'admissions@university.ac.tz' }} &middot; {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }}</div>
-  @php $joinSignatories = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->get(); @endphp
-  @if($joinSignatories->count())
+  @php $activeSignatory = \App\Models\Signatory::where('is_active',1)->orderBy('order_index')->first(); @endphp
+  @if($activeSignatory)
     <div style="margin-top:14px; display:flex; justify-content:space-between; gap:18px; font-size:8.5pt;">
-      @foreach($joinSignatories as $sig)
-        <div style="flex:1; text-align:center; max-width:48%;">
-          @if($sig->signature_image && file_exists(public_path($sig->signature_image)))
-            <img src="{{ public_path($sig->signature_image) }}" style="height:38px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
-          @else
-            <div style="height:38px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
-          @endif
-          <div style="font-weight:800;">{{ $sig->title ? $sig->title.' ' : '' }}{{ $sig->name }}</div>
-          <div style="color:#6B5A48;">{{ $sig->designation ?? '' }}</div>
-        </div>
-      @endforeach
+      <div style="flex:1; text-align:center; max-width:48%;">
+        @if($activeSignatory->signature_image && file_exists(public_path($activeSignatory->signature_image)))
+          <img src="{{ public_path($activeSignatory->signature_image) }}" style="height:38px; object-fit:contain; margin:4px auto 2px;" alt="Signature">
+        @else
+          <div style="height:38px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+        @endif
+        <div style="font-weight:800;">For: {{ $activeSignatory->title ? $activeSignatory->title.' ' : '' }}{{ $activeSignatory->name }}</div>
+        <div style="color:#6B5A48;">{{ $activeSignatory->designation ?: 'Registrar — Academic' }}<br>17 September 2026</div>
+      </div>
+      <div style="flex:1; text-align:center; max-width:48%;">
+        <div style="height:38px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+        <div style="font-weight:800;">For: Vice Chancellor</div>
+        <div style="color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}<br>17 September 2026</div>
+      </div>
+    </div>
+  @else
+    <div style="margin-top:14px; display:flex; justify-content:space-between; gap:18px; font-size:8.5pt;">
+      <div style="flex:1; text-align:center; max-width:48%;">
+        <div style="height:38px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+        <div style="font-weight:800;">For: Vice Chancellor</div>
+        <div style="color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name','University of Dodoma') }}<br>17 September 2026</div>
+      </div>
+      <div style="flex:1; text-align:center; max-width:48%;">
+        <div style="height:38px; border-bottom:1px solid #07364F; margin:10px 0 4px;"></div>
+        <div style="font-weight:800;">Registrar — Academic</div>
+        <div style="color:#6B5A48;">17 September 2026</div>
+      </div>
     </div>
   @endif
   <div style="margin-top:14px; font-size:8pt; color:#6B5A48; border-top:1px dashed #E4D7C2; padding-top:6px;">Ref: {{ $letter?->letter_number ?? \App\Models\Setting::getValue('university_acronym','UDOM').'/JI/'.$application->application_number }} &middot; {{ $application->application_number }} &middot; Verify at {{ url('/verify-admission') }}</div>

@@ -26,6 +26,10 @@ class SignatoryController extends Controller
         $signatory = Signatory::create($data);
         $this->attachSignature($request, $signatory);
 
+        if ($signatory->is_active) {
+            Signatory::where('id', '!=', $signatory->id)->update(['is_active' => false]);
+        }
+
         return redirect()->route('admin.signatories.index')->with('success', 'Signatory added.');
     }
 
@@ -44,6 +48,10 @@ class SignatoryController extends Controller
 
         $signatory->update($data);
         $this->attachSignature($request, $signatory);
+
+        if ($signatory->fresh()->is_active) {
+            Signatory::where('id', '!=', $signatory->id)->update(['is_active' => false]);
+        }
 
         return back()->with('success', 'Signatory updated.');
     }
