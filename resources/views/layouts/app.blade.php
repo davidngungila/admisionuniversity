@@ -129,7 +129,7 @@
             <div class="p-topbar-left">
                 <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> {{ \App\Models\Setting::where('key','admissions_email')->value('value') ?? 'admissions@udom.ac.tz' }}</span>
                 <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.07 12.81 19.79 19.79 0 0 1 2 4.18 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.72c.12 1.2.4 2.37.82 3.5a2 2 0 0 1-.57 2.11L8.09 10.49a16 16 0 0 0 5.42 5.42l1.16-1.16a2 2 0 0 1 2.11-.57c1.13.42 2.3.7 3.5.82A2 2 0 0 1 22 16.92z"/></svg> +255 26 231 0300</span>
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Dodoma, Tanzania</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {{ \App\Models\Setting::getValue('contact_city','Dodoma, Tanzania') }}</span>
             </div>
             <div class="p-topbar-right">
                 <span style="opacity:.65">Academic Year: {{ \App\Models\AcademicYear::where('is_active',true)->value('name') ?? '2026/2027' }}</span>
@@ -257,7 +257,7 @@
             <div><div style="font-weight:600;font-size:13px;">Support</div><div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:rgba(255,255,255,.6);"><a href="{{ route('public.verify') }}">Verify Admission</a><a href="{{ route('public.fees') }}">Fees</a><a href="{{ route('public.contact') }}">Contact</a></div></div>
             <div><div style="font-weight:600;font-size:13px;">Contact</div><p style="color:rgba(255,255,255,.6);font-size:13px;margin-top:10px;line-height:1.6;">{{ \App\Models\Setting::getValue('admissions_office','Admissions Office') }}<br>{{ \App\Models\Setting::getValue('contact_campus','Main Campus') }}<br>{{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}<br>{{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }}</p></div>
         </div>
-        <div style="border-top:1px solid rgba(255,255,255,.08);padding:16px 24px;text-align:center;color:rgba(255,255,255,.4);font-size:12px;">&copy; {{ date('Y') }} {{ \App\Models\Setting::getValue('university_name','University') }}. All Rights Reserved.</div>
+        <div style="border-top:1px solid rgba(255,255,255,.08);padding:16px 24px;text-align:center;color:rgba(255,255,255,.4);font-size:12px;">Version 3.0 Copyright © 2026 MoCU Online Application System. All rights reserved.</div>
     </footer>
 </body>
 </html>

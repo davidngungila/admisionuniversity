@@ -173,6 +173,7 @@
             @if(isset($errors) && $errors->any())<div style="background:var(--danger-100);border:1px solid #e8b4b0;color:var(--danger);padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;"><ul style="margin:0 0 0 16px;">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>@endif
             @yield('content')
         </div>
+        @include('layouts.partials.system-footer')
     </div>
     @include('layouts.partials.confirm-modal')
     <form id="idleLogoutForm" method="POST" action="{{ route('logout') }}" style="display:none">@csrf</form>

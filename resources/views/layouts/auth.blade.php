@@ -35,6 +35,7 @@
         @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
         @yield('content')
     </div>
+    <div style="position:fixed;bottom:0;left:0;right:0;padding:10px 16px;text-align:center;color:rgba(255,255,255,.65);font-size:11px;letter-spacing:.02em;">Version 3.0 Copyright © 2026 MoCU Online Application System. All rights reserved.</div>
     <div id="toastHost"></div>
     @include('layouts.partials.theme-scripts')
 </body>

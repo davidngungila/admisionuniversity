@@ -3,8 +3,8 @@
 @section('content')
 <div style="max-width:1100px;margin:0 auto;padding:28px 24px 40px">
     <div style="display:grid;grid-template-columns:.95fr 1.05fr;gap:24px;align-items:start;">
-        {{-- Left — info --}}
-        <div>
+        {{-- Left — info (hidden on small screens) --}}
+        <div class="login-left">
             <div style="display:inline-flex;align-items:center;gap:8px;background:var(--acacia-100);color:var(--acacia-600);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Welcome back</div>
             <h1 style="margin-top:14px;font-size:30px;font-weight:800;line-height:1.1;color:var(--coffee-900);">Sign in to<br><span style="color:var(--terracotta-600)">your admission account</span></h1>
             <p style="margin-top:10px;color:var(--ink-soft);font-size:14px;line-height:1.6;">Access your dashboard, continue your application, track status and download letters. Same header as homepage (top bar, nav, marquee, bottom bar).</p>
@@ -31,10 +31,11 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="form-grid" style="gap:14px;">
-                        <div class="field @error('email') err @enderror">
-                            <label class="field-label">Email *</label>
-                            <input name="email" type="email" value="{{ old('email') }}" required placeholder="you@example.com">
+                        <div class="field @error('email') @error('login') err @enderror">
+                            <label class="field-label">Email or Index Number (Username) *</label>
+                            <input name="login" type="text" value="{{ old('email', old('login')) }}" required placeholder="you@example.com or S0001-0001-2015">
                             @error('email')<span class="field-err">{{ $message }}</span>@enderror
+                            @error('login')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('password') err @enderror">
                             <label class="field-label">Password *</label>
@@ -55,6 +56,6 @@
     </div>
 </div>
 <style>
-@media(max-width:900px){ div[style*="grid-template-columns:.95fr"]{grid-template-columns:1fr !important;} }
+@media(max-width:900px){ div[style*="grid-template-columns:.95fr"]{grid-template-columns:1fr !important;} .login-left{display:none !important;} }
 </style>
 @endsection

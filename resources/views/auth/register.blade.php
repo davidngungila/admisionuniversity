@@ -24,11 +24,8 @@
                             <label class="field-label">Entry type *</label>
                             <select name="entry_type" required>
                                 <option value="">— Select entry type —</option>
-                                <option value="direct" @selected(old('entry_type')==='direct')>Direct Entry</option>
-                                <option value="equivalent" @selected(old('entry_type')==='equivalent')>Equivalent Entry</option>
-                                <option value="mature_age" @selected(old('entry_type')==='mature_age')>Mature Age</option>
-                                <option value="transfer" @selected(old('entry_type')==='transfer')>Transfer</option>
-                                <option value="other" @selected(old('entry_type')==='other')>Other</option>
+                                <option value="direct" @selected(old('entry_type')==='direct')>Direct</option>
+                                <option value="equivalent" @selected(old('entry_type')==='equivalent')>Equivalent</option>
                             </select>
                             @error('entry_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
@@ -50,9 +47,9 @@
                             @error('email')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('index_number') err @enderror">
-                            <label class="field-label">First Sitting Form IV or Equivalent Form IV Index No. Eg. S0001-0001-2022 (Username): *</label>
+                            <label class="field-label">Index Number (Username): *</label>
                             <input name="index_number" value="{{ old('index_number') }}" required placeholder="S0001-0001-2015 or P0001-0001-2015" style="font-family:'Consolas',monospace;letter-spacing:.02em;">
-                            <span class="field-hint">e.g. S0001-0001-2015 or P0001-0001-2015</span>
+                            <span class="field-hint">e.g. S0001-0001-2015 or P0001-0001-2015 — used as your username to sign in.</span>
                             @error('index_number')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('phone') err @enderror">

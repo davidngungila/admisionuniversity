@@ -21,26 +21,57 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'string', 'email'],
+        $request->validate([
+            'login'    => ['required', 'string', 'max:255'],
             'password' => ['required', 'string'],
+            // Back-compat: the old form posted `email` instead of `login`.
+            'email'    => ['nullable', 'string'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        $login = trim($request->input('login') ?? $request->input('email') ?? '');
+        $password = $request->input('password');
+        $remember = $request->boolean('remember');
 
-            $user = Auth::user();
-
-            // Always direct to dashboard (no intended redirect)
-            if ($user->isAdmin()) {
-                return redirect()->route('admin.dashboard');
-            }
-
-            return redirect()->route('applicant.dashboard');
+        $attempts = [];
+        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+            $attempts[] = ['email' => $login, 'password' => $password];
+        } else {
+            // Index number / username / passport / chosen username is stored in users.name
+            // (Tanzanian: index, International: "First Surname", Postdoc: chosen username).
+            // Also try the applicants tables for index / passport / username.
+            $attempts[] = ['name' => $login, 'password' => $password];
+            $attempts[] = ['email' => $login, 'password' => $password];
         }
 
-        return back()->withErrors(['email' => 'The provided credentials do not match our records.'])
-            ->onlyInput('email');
+        foreach ($attempts as $credentials) {
+            if (Auth::attempt($credentials, $remember)) {
+                $request->session()->regenerate();
+                $user = Auth::user();
+                if ($user->isAdmin()) {
+                    return redirect()->route('admin.dashboard');
+                }
+                return redirect()->route('applicant.dashboard');
+            }
+        }
+
+        // Fallback: look up applicant by exam_index_number / passport_number / username and try the linked user.
+        $applicant = \App\Models\Applicant::where('exam_index_number', $login)
+            ->orWhere('passport_number', $login)
+            ->orWhere('username', $login)
+            ->first();
+        if ($applicant && $applicant->user) {
+            if (Auth::attempt(['email' => $applicant->user->email, 'password' => $password], $remember)) {
+                $request->session()->regenerate();
+                $user = Auth::user();
+                if ($user->isAdmin()) {
+                    return redirect()->route('admin.dashboard');
+                }
+                return redirect()->route('applicant.dashboard');
+            }
+        }
+
+        return back()->withErrors(['login' => 'The provided credentials do not match our records.'])
+            ->onlyInput('login');
     }
 
     public function showRegister()
@@ -62,7 +93,7 @@ class AuthController extends Controller
         if ($category === 'tanzanian') {
             $validated = $request->validate([
                 'applicant_category'    => ['required','string','in:tanzanian,international,postdoctoral'],
-                'entry_type'            => ['required', 'string', 'max:40'],
+                'entry_type'            => ['required', 'string', 'in:direct,equivalent'],
                 'application_type'      => ['required', 'exists:admission_levels,id'],
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'index_number'          => ['required', 'string', 'max:40'],

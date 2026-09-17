@@ -139,6 +139,13 @@
                         <input type="file" name="university_logo" accept="image/*" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;">
                         <span class="field-hint">Leave empty to keep current. Replaces the mark in the Admin Panel, sidebar and documents.</span>
                     </div>
+                    @php $contactCityIdx = $settings->search(fn($s)=>$s->key==='contact_city'); $contactCityVal = $contactCityIdx !== false ? $settings[$contactCityIdx]->value : 'Dodoma, Tanzania'; @endphp
+                    <div class="field" style="margin-top:14px;">
+                        <label class="field-label">Top Header Location</label>
+                        <input name="settings[{{ $contactCityIdx !== false ? $contactCityIdx : $settings->count() }}][key]" type="hidden" value="contact_city">
+                        <input name="settings[{{ $contactCityIdx !== false ? $contactCityIdx : $settings->count() }}][value]" value="{{ $contactCityVal }}" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;" placeholder="Dodoma, Tanzania">
+                        <span class="field-hint">Shown in the top bar next to email/phone (e.g. Dodoma, Tanzania). Stored in database — edit and save to update the header.</span>
+                    </div>
                     <div style="display:flex;justify-content:flex-end;margin-top:18px;">
                         <button class="btn btn-primary" style="min-width:170px;justify-content:center;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
