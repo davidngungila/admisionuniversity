@@ -29,8 +29,6 @@
                 <div style="margin-top:10px;font-size:11px;color:var(--ink-soft);line-height:1.5;">{{ \App\Models\Setting::getValue('contact_box','P.O. Box 259') }}, {{ \App\Models\Setting::getValue('contact_city','Dodoma, Tanzania') }} · Tel: {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }} · Email: {{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}<br>{{ \App\Models\Setting::getValue('admissions_office','Directorate of Undergraduate Studies') }} · Admissions Office</div>
             </div>
 
-            @include('layouts.partials.verified-feature', ['application' => $application])
-
             @php
                 $applicant = $application->applicant;
                 $fullName = trim($applicant->first_name.' '.$applicant->middle_name.' '.$applicant->last_name);

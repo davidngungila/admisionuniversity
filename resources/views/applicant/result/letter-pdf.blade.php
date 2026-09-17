@@ -35,16 +35,6 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
   <div style="font-size:8pt; letter-spacing:1px; color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name_sw','Chuo Kikuu Cha Dodoma') }}</div>
   <div style="font-size:7.5pt; color:#6B5A48; margin-top:4px;">{{ \App\Models\Setting::getValue('contact_box','P.O. Box 259') }}, {{ \App\Models\Setting::getValue('contact_city','Dodoma, Tanzania') }} &middot; Tel: {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }} &middot; {{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}</div>
 </div>
-@php $verifyUrl = url('/verify-admission?application_number='.($application->application_number ?? '')); $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=90x90&data='.urlencode($verifyUrl); @endphp
-<div style="position:relative; margin-top:10px; padding:10px; background:#E1EFEA; border:1px solid #c8d7a8; border-radius:8px; text-align:center;">
-  <div style="position:absolute;top:6px;right:10px;transform:rotate(7deg);border:2px solid #2E7D6B;color:#2E7D6B;font-weight:800;letter-spacing:.12em;font-size:7pt;padding:3px 8px;border-radius:6px;">VERIFIED</div>
-  <div style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#2E7D6B;border:1px solid #c8d7a8;padding:4px 10px;border-radius:16px;font-weight:800;font-size:7pt;letter-spacing:.06em;text-transform:uppercase;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:10px;height:10px"><path d="M20 6L9 17l-5-5"/></svg> Record Verified Authentic</div>
-  <div style="margin-top:6px; font-size:7pt; color:#6B5A48;">Application <strong style="color:#07364F;">{{ $application->application_number ?? '—' }}</strong> &middot; {{ $application->status }}</div>
-  <div style="margin-top:6px; display:flex; align-items:center; justify-content:center; gap:8px;">
-    <img src="{{ $qrUrl }}" alt="QR" style="width:60px;height:60px; border:1px solid #E4D7C2; border-radius:6px; background:#fff; padding:3px;">
-    <div style="text-align:left; font-size:6.5pt; color:#6B5A48; line-height:1.3;">Verify at<br><span style="color:#07364F; font-weight:700; word-break:break-all;">{{ $verifyUrl }}</span></div>
-  </div>
-</div>
 <div class="meta">
   <table><tr>
     <td>Ref No: <strong style="color:#C2592B;">{{ $letter->letter_number }}</strong><br>Application No: <strong>{{ $application->application_number }}</strong></td>
