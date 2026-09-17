@@ -35,13 +35,12 @@
                         <div class="field @error('application_type') err @enderror">
                             <label class="field-label">Application Type *</label>
                             <select name="application_type" required>
-                                <option value="">— Select application type —</option>
-                                <option value="direct" @selected(old('application_type')==='direct')>Direct Application</option>
-                                <option value="equivalent" @selected(old('application_type')==='equivalent')>Equivalent Application</option>
-                                <option value="transfer" @selected(old('application_type')==='transfer')>Transfer</option>
-                                <option value="mature_age" @selected(old('application_type')==='mature_age')>Mature Age</option>
-                                <option value="other" @selected(old('application_type')==='other')>Other</option>
+                                <option value="">— Select level —</option>
+                                @foreach(($levels ?? []) as $lv)
+                                    <option value="{{ $lv->id }}" @selected((string)old('application_type')===(string)$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
+                                @endforeach
                             </select>
+                            <span class="field-hint">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span>
                             @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('email') err @enderror">
@@ -130,13 +129,12 @@
                         <div class="field @error('application_type') err @enderror">
                             <label class="field-label">Application Type *</label>
                             <select name="application_type" required>
-                                <option value="">— Select application type —</option>
-                                <option value="direct" @selected(old('application_type')==='direct')>Direct Application</option>
-                                <option value="equivalent" @selected(old('application_type')==='equivalent')>Equivalent Application</option>
-                                <option value="transfer" @selected(old('application_type')==='transfer')>Transfer</option>
-                                <option value="mature_age" @selected(old('application_type')==='mature_age')>Mature Age</option>
-                                <option value="other" @selected(old('application_type')==='other')>Other</option>
+                                <option value="">— Select level —</option>
+                                @foreach(($levels ?? []) as $lv)
+                                    <option value="{{ $lv->id }}" @selected((string)old('application_type')===(string)$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
+                                @endforeach
                             </select>
+                            <span class="field-hint">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span>
                             @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('email') err @enderror">
@@ -217,13 +215,12 @@
                         <div class="field @error('application_type') err @enderror">
                             <label class="field-label">Application Type *</label>
                             <select name="application_type" required>
-                                <option value="">— Select application type —</option>
-                                <option value="direct" @selected(old('application_type')==='direct')>Direct Application</option>
-                                <option value="equivalent" @selected(old('application_type')==='equivalent')>Equivalent Application</option>
-                                <option value="transfer" @selected(old('application_type')==='transfer')>Transfer</option>
-                                <option value="mature_age" @selected(old('application_type')==='mature_age')>Mature Age</option>
-                                <option value="other" @selected(old('application_type')==='other')>Other</option>
+                                <option value="">— Select level —</option>
+                                @foreach(($levels ?? []) as $lv)
+                                    <option value="{{ $lv->id }}" @selected((string)old('application_type')===(string)$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
+                                @endforeach
                             </select>
+                            <span class="field-hint">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span>
                             @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('email') err @enderror">
