@@ -452,6 +452,37 @@ class ApplicationController extends Controller
 
     public function academicResults(Request $request, Application $application, $step)
     {
+        // Defensive: the exam_type select was visually locked via `disabled` in an earlier
+        // build, so browsers excluded it from the POST. Ensure every result has an
+        // exam_type/exam_body before validation so old cached pages still save.
+        $rawResults = $request->input('results', []);
+        $patched = false;
+        foreach ($rawResults as $i => $r) {
+            if (empty($r['exam_type'])) {
+                $identifier = trim($r['index_number'] ?? '');
+                $provider = strtoupper(trim($r['exam_body'] ?? ''));
+                if ($provider === 'NACTVET') {
+                    $rawResults[$i]['exam_type'] = (stripos($identifier, 'AVN') === 0) ? 'Diploma' : 'Certificate';
+                } elseif ($provider === 'NECTA') {
+                    // A-Level vs O-Level cannot be distinguished by identifier alone; keep O-Level as safe default
+                    $rawResults[$i]['exam_type'] = 'O-Level';
+                } else {
+                    if (stripos($identifier, 'AVN') === 0) $rawResults[$i]['exam_type'] = 'Diploma';
+                    elseif (stripos($identifier, 'FT') === 0 || stripos($identifier, 'REG') === 0) $rawResults[$i]['exam_type'] = 'Certificate';
+                    else $rawResults[$i]['exam_type'] = 'O-Level';
+                }
+                $patched = true;
+            }
+            if (empty($r['exam_body'])) {
+                $examType = $rawResults[$i]['exam_type'] ?? ($r['exam_type'] ?? '');
+                $rawResults[$i]['exam_body'] = in_array($examType, ['O-Level','A-Level'], true) ? 'NECTA' : 'NACTVET';
+                $patched = true;
+            }
+        }
+        if ($patched) {
+            $request->merge(['results' => $rawResults]);
+        }
+
         $validated = $request->validate([
             'results' => ['required', 'array', 'min:1'],
             'results.*.exam_type'   => ['required', 'string', 'max:40'],
