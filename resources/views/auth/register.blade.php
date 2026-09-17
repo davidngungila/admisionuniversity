@@ -103,13 +103,12 @@
                             @error('surname')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('passport_number') err @enderror">
-                            <label class="field-label">Passport Number (Username): *</label>
+                            <label class="field-label" style="display:flex;align-items:center;gap:6px;">Passport Number (Username): * <span class="info-icon" tabindex="0">i<span class="info-tip">e.g. AB1234567 — used as your username to sign in.</span></span></label>
                             <input name="passport_number" value="{{ old('passport_number') }}" required placeholder="e.g. AB1234567" style="font-family:'Consolas',monospace;">
-                            <span class="field-hint">Please enter your Passport Number</span>
                             @error('passport_number')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('scholarship_category') err @enderror">
-                            <label class="field-label">Scholarship Category *</label>
+                            <label class="field-label" style="display:flex;align-items:center;gap:6px;">Scholarship Category * <span class="info-icon" tabindex="0">i<span class="info-tip">Select No Scholarship if you are applying through the normal admission process.</span></span></label>
                             <select name="scholarship_category" required>
                                 <option value="">— Select category —</option>
                                 <option value="none" @selected(old('scholarship_category')==='none')>No Scholarship</option>
@@ -118,7 +117,6 @@
                                 <option value="heslb" @selected(old('scholarship_category')==='heslb')>HESLB Loan</option>
                                 <option value="other" @selected(old('scholarship_category')==='other')>Other</option>
                             </select>
-                            <span class="field-hint">Select No Scholarship if you are applying through the normal admission process.</span>
                             @error('scholarship_category')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('application_type') err @enderror">
@@ -191,9 +189,8 @@
                             @error('surname')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('username') err @enderror">
-                            <label class="field-label">Username: *</label>
+                            <label class="field-label" style="display:flex;align-items:center;gap:6px;">Username: * <span class="info-icon" tabindex="0">i<span class="info-tip">Choose a username — used for signing into your account.</span></span></label>
                             <input name="username" value="{{ old('username') }}" required placeholder="Choose a username">
-                            <span class="field-hint">Used for signing into your account.</span>
                             @error('username')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('phd_graduation_year') err @enderror">
@@ -214,7 +211,7 @@
                             @error('phone')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('scholarship_category') err @enderror">
-                            <label class="field-label">Scholarship Category *</label>
+                            <label class="field-label" style="display:flex;align-items:center;gap:6px;">Scholarship Category * <span class="info-icon" tabindex="0">i<span class="info-tip">Select No Scholarship if you are applying through the normal admission process.</span></span></label>
                             <select name="scholarship_category" required>
                                 <option value="">— Select category —</option>
                                 <option value="none" @selected(old('scholarship_category')==='none')>No Scholarship</option>
@@ -223,7 +220,6 @@
                                 <option value="heslb" @selected(old('scholarship_category')==='heslb')>HESLB Loan</option>
                                 <option value="other" @selected(old('scholarship_category')==='other')>Other</option>
                             </select>
-                            <span class="field-hint">Select No Scholarship if you are applying through the normal admission process.</span>
                             @error('scholarship_category')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('password') err @enderror">
