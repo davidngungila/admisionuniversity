@@ -72,11 +72,11 @@
                         </div>
                         <div></div>
                     </div>
-                    <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);">
-                        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Create Account</button>
+                    <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary btn-sm">Create Account</button>
+                        <a href="{{ route('login') }}" class="btn btn-ghost btn-sm">Go back to sign in</a>
                     </div>
-                    <p style="font-size:13px;text-align:center;margin-top:14px;color:var(--ink-soft);">Already have an account? <a href="{{ route('login') }}" style="color:var(--terracotta-600);font-weight:700;">Sign in</a></p>
-                    <p style="text-align:center;margin-top:8px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
+                    <p style="text-align:center;margin-top:10px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
                 </form>
             </div>
         </div>
@@ -158,11 +158,11 @@
                             <span class="field-hint">Please confirm password</span>
                         </div>
                     </div>
-                    <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);">
-                        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Create Account</button>
+                    <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary btn-sm">Create Account</button>
+                        <a href="{{ route('login') }}" class="btn btn-ghost btn-sm">Go back to sign in</a>
                     </div>
-                    <p style="font-size:13px;text-align:center;margin-top:14px;color:var(--ink-soft);">Already have an account? <a href="{{ route('login') }}" style="color:var(--terracotta-600);font-weight:700;">Sign in</a></p>
-                    <p style="text-align:center;margin-top:8px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
+                    <p style="text-align:center;margin-top:10px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
                 </form>
             </div>
         </div>
@@ -241,11 +241,11 @@
                             <span class="field-hint">Confirm password</span>
                         </div>
                     </div>
-                    <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);">
-                        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Create Account</button>
+                    <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary btn-sm">Create Account</button>
+                        <a href="{{ route('login') }}" class="btn btn-ghost btn-sm">Go back to sign in</a>
                     </div>
-                    <p style="font-size:13px;text-align:center;margin-top:14px;color:var(--ink-soft);">Already have an account? <a href="{{ route('login') }}" style="color:var(--terracotta-600);font-weight:700;">Sign in</a></p>
-                    <p style="text-align:center;margin-top:8px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
+                    <p style="text-align:center;margin-top:10px;"><a href="{{ route('home') }}" style="font-size:12px;color:var(--ink-soft);">← Back to home</a></p>
                 </form>
             </div>
         </div>
