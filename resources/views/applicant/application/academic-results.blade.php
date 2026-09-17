@@ -197,7 +197,11 @@ function setBlockFields(block, data) {
     block.querySelector('.ar-verified-tag').style.display = data.verified ? '' : 'none';
     block.querySelector('.ar-fetch-btn').disabled = !!data.verified;
     if (data.verified) block.querySelector('.ar-fetch-label').textContent = 'Fetched ✓';
-    block.querySelector('.ar-exam-type').disabled = !!data.verified;
+    const sel = block.querySelector('.ar-exam-type');
+    sel.disabled = false;
+    sel.style.pointerEvents = data.verified ? 'none' : '';
+    sel.style.opacity = data.verified ? '0.7' : '';
+    sel.tabIndex = data.verified ? -1 : 0;
     block.querySelector('.ar-identifier').readOnly = !!data.verified;
 }
 
@@ -267,13 +271,19 @@ async function fetchOfficialResult(block) {
 
 function resetBlockVerified(block) {
     block.querySelectorAll('[readonly]').forEach(el => el.readOnly = false);
-    block.querySelector('.ar-exam-type').disabled = false;
+    const sel = block.querySelector('.ar-exam-type');
+    sel.disabled = false;
+    sel.style.pointerEvents = '';
+    sel.style.opacity = '';
+    sel.tabIndex = 0;
     block.querySelector('.ar-exam-body').value = '';
     block.querySelector('.ar-verified').value = '0';
     applyExamTypeUI(block);
 }
 
 function validateAcademicForm(form) {
+    // Ensure the exam_type select is submitted (it is visually locked but never disabled so its value is posted).
+    form.querySelectorAll('.ar-exam-type').forEach(el => { el.disabled = false; el.style.pointerEvents = ''; });
     const missing = [];
     form.querySelectorAll('.result-block').forEach(block => {
         if (block.querySelector('.ar-verified').value !== '1') {
