@@ -171,6 +171,7 @@ Route::middleware(['auth', 'active', 'role:super_admin,admin,staff'])->prefix('a
     Route::get('selection/batches/create', [SelectionController::class, 'createBatch'])->name('selection.create');
     Route::post('selection/batches', [SelectionController::class, 'storeBatch'])->name('selection.store');
     Route::get('selection/batches/{batch}', [SelectionController::class, 'batchShow'])->name('selection.show');
+    Route::get('selection/batches/{batch}/pdf', [SelectionController::class, 'batchPdf'])->name('selection.pdf');
     Route::post('selection/batches/{batch}/run', [SelectionController::class, 'run'])->name('selection.run');
     Route::patch('selection/results/{result}', [SelectionController::class, 'updateResult'])->name('selection.result.update');
 

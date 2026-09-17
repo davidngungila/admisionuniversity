@@ -9,6 +9,7 @@ use App\Models\Application;
 use App\Models\ApplicationRound;
 use App\Models\SelectionBatch;
 use App\Models\SelectionResult;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class SelectionController extends Controller
@@ -47,6 +48,21 @@ class SelectionController extends Controller
     {
         $batch->load(['academicYear','applicationRound','admissionLevel','results.application.applicant','results.programme']);
         return view('admin.selection.batch-show', compact('batch'));
+    }
+
+    public function batchPdf(SelectionBatch $batch)
+    {
+        $batch->load(['academicYear','applicationRound','admissionLevel','createdByUser','results.application.applicant.citizenship','results.application.admissionWindow','results.programme.campus','results.programme.department.faculty']);
+
+        if (request()->has('preview')) {
+            return view('admin.selection.batch-pdf', compact('batch'));
+        }
+
+        $pdf = Pdf::loadView('admin.selection.batch-pdf', compact('batch'));
+        $pdf->setPaper('a4', 'landscape');
+        $filename = 'Selection-Batch-'.preg_replace('/[^A-Za-z0-9\-]/','-', $batch->name).'-'.$batch->id.'.pdf';
+
+        return $pdf->download($filename);
     }
 
     public function run(SelectionBatch $batch)

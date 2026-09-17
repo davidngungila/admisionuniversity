@@ -3,7 +3,11 @@
 @section('content')
 <div class="page-head">
     <div><h1>{{ $batch->name }}</h1><p class="page-sub">{{ $batch->academicYear->name }} · Round {{ $batch->applicationRound->round_number }} — <span class="tag {{ $batch->status==='PROCESSED' ? 'tag-green' : 'tag-gold' }}">{{ $batch->status }}</span></p></div>
-    <div class="page-actions"><a href="{{ route('admin.selection.batches') }}" class="btn btn-ghost">← Back to Batches</a></div>
+    <div class="page-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <a href="{{ route('admin.selection.pdf', encId($batch->id)) }}" class="btn btn-primary btn-sm" style="background:var(--terracotta-600);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Export PDF</a>
+        <a href="{{ route('admin.selection.pdf', encId($batch->id)) }}?preview=1" target="_blank" class="btn btn-ghost btn-sm">Preview PDF</a>
+        <a href="{{ route('admin.selection.batches') }}" class="btn btn-ghost btn-sm">← Back to Batches</a>
+    </div>
 </div>
 
 <div class="panel">
@@ -25,7 +29,7 @@
 </div>
 
 <div class="table-card" style="margin-top:18px">
-    <div class="panel-head"><div class="panel-title">Results ({{ $batch->results->count() }})</div></div>
+    <div class="panel-head"><div class="panel-title">Results ({{ $batch->results->count() }})</div><div style="display:flex;gap:8px;"><a href="{{ route('admin.selection.pdf', encId($batch->id)) }}" class="btn btn-ghost btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Export PDF</a></div></div>
     <div class="table-scroll">
         <table>
             <thead><tr><th>Applicant</th><th>Programme</th><th class="center">Score</th><th class="center">Status</th><th class="right">Actions</th></tr></thead>
