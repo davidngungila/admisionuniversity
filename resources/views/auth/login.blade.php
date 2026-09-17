@@ -31,7 +31,7 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="form-grid" style="gap:14px;">
-                        <div class="field @error('email') @error('login') err @enderror">
+                        <div class="field @error('email') err @enderror @error('login') err @enderror">
                             <label class="field-label">Email or Index Number (Username) *</label>
                             <input name="login" type="text" value="{{ old('email', old('login')) }}" required placeholder="you@example.com or S0001-0001-2015">
                             @error('email')<span class="field-err">{{ $message }}</span>@enderror
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <label class="check-row" style="margin-top:14px;"><input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember me</label>
-                    @if($errors->has('email') && str_contains($errors->first('email'),'credentials'))
+                    @if(($errors->has('email') && str_contains($errors->first('email'),'credentials')) || ($errors->has('login') && str_contains($errors->first('login'),'credentials')))
                         <div class="field-err" style="margin-top:10px;">Invalid credentials. Please try again.</div>
                     @endif
                     <button class="btn btn-primary" style="width:100%;margin-top:16px;">Sign In</button>
