@@ -110,6 +110,18 @@
     </div>
 </div>
 
+<div class="panel" style="margin-top:16px;background:#e8f0fe;border-color:#b6c8f0;">
+    <div class="panel-body" style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:32px;height:32px;border-radius:8px;background:var(--terracotta-100);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;color:var(--terracotta-600);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.07 12.81 19.79 19.79 0 0 1 2 4.18 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.72c.12 1.2.4 2.37.82 3.5a2 2 0 0 1-.57 2.11L8.09 10.49a16 16 0 0 0 5.42 5.42l1.16-1.16a2 2 0 0 1 2.11-.57c1.13.42 2.3.7 3.5.82A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div style="flex:1;">
+            <div style="font-weight:800;font-size:13px;color:#1a4da1;">SMS Confirmation</div>
+            <div style="font-size:12.5px;color:var(--ink-soft);margin-top:4px;line-height:1.5;">A successful submission message will be sent instantly to <strong style="color:var(--coffee-900);">{{ $summary['applicant']->phone }}</strong> with your application number. Keep your phone on and track progress from your dashboard.</div>
+        </div>
+    </div>
+</div>
+
 <div class="panel" style="margin-top:16px;">
     <div class="panel-body">
         <form method="POST" action="{{ route('applicant.application.save', [encId($application->id), $currentStep->route]) }}" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;" onsubmit="event.preventDefault(); const _f=this; confirmModal('Submit application','Are you sure you want to submit your application? This cannot be undone.',()=>_f.submit())">

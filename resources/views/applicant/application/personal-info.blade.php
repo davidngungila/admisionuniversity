@@ -87,11 +87,6 @@
                     <input name="nida_number" value="{{ old('nida_number', $applicant->nida_number) }}">
                     @error('nida_number')<span class="field-err">{{ $message }}</span>@enderror
                 </div>
-                <div class="field @error('exam_index_number') err @enderror">
-                    <label class="field-label">Exam Index Number</label>
-                    <input name="exam_index_number" value="{{ old('exam_index_number', $applicant->exam_index_number) }}">
-                    @error('exam_index_number')<span class="field-err">{{ $message }}</span>@enderror
-                </div>
                 <div class="field @error('marital_status') err @enderror">
                     <label class="field-label">Marital Status</label>
                     <select name="marital_status">
