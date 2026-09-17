@@ -28,7 +28,8 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 8.5pt; line-height: 1.5;
 @php
   $applicantCount = $batch->results->count();
 @endphp
-<div class="header">
+<div class="header" style="position:relative;">
+  <div style="position:absolute;top:8px;right:8px;border:2px solid #2E7D6B;color:#2E7D6B;background:#E1EFEA;padding:4px 10px;font-weight:800;font-size:9pt;letter-spacing:1px;border-radius:4px;">VERIFIED</div>
   @php $pdfLogo = \App\Models\Setting::getValue('university_logo'); @endphp
   @if($pdfLogo)
     <img src="{{ public_path($pdfLogo) }}" style="width:48px;height:48px;object-fit:contain;border-radius:10px;background:#fff;padding:3px;border:1px solid #E4D7C2;" alt="Logo">

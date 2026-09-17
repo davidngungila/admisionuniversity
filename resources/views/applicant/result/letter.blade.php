@@ -18,7 +18,8 @@
         {{-- PDF Preview --}}
         <div style="background:#fff;padding:36px 48px 36px 56px;font-size:13.5px;line-height:1.7;color:var(--coffee-800);border-left:4px solid var(--terracotta-600);">
             {{-- Header --}}
-            <div style="text-align:center;padding-bottom:18px;border-bottom:3px double var(--coffee-900);">
+            <div style="text-align:center;padding-bottom:18px;border-bottom:3px double var(--coffee-900);position:relative;">
+                <div style="position:absolute;top:0;right:0;border:2px solid #2E7D6B;color:#2E7D6B;background:#E1EFEA;padding:4px 10px;font-weight:800;font-size:9pt;letter-spacing:1px;border-radius:4px;">VERIFIED</div>
                 <div style="display:flex;justify-content:center;">
                     @php $docLogo = \App\Models\Setting::getValue('university_logo'); @endphp
                     <div style="width:64px;height:64px;border-radius:14px;@if(!$docLogo)background:linear-gradient(155deg,var(--terracotta-600),var(--gold-500));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;@else background:#fff;padding:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);@endif flex:none;">@if($docLogo)<img src="{{ asset($docLogo) }}" style="width:100%;height:100%;object-fit:contain;" alt="Logo">@else {{ substr(\App\Models\Setting::getValue('university_acronym','UDOM'),0,1) }} @endif</div>
