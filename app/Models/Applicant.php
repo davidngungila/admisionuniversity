@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'phone',
     'email',
     'exam_index_number',
+    'passport_number',
     'entry_type',
     'scholarship_category',
     'application_type',

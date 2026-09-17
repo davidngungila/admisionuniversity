@@ -95,16 +95,34 @@ class ApplicationController extends Controller
 
     protected function ensureApplicant($user)
     {
-        $parts = preg_split('/\s+/', trim($user->name), 3);
+        $category = session('reg_applicant_category', 'tanzanian');
+        $first = session('reg_first_name');
+        $surname = session('reg_surname');
+
+        if ($first && $surname) {
+            $firstName = $first;
+            $lastName  = $surname;
+            $middle    = null;
+        } else {
+            $parts = preg_split('/\s+/', trim($user->name), 3);
+            $firstName = $parts[0] ?? $user->name;
+            $middle    = $parts[1] ?? null;
+            $lastName  = $parts[2] ?? ($parts[1] ?? '');
+            // Post-Doctoral / International may have surname split differently
+            if ($category === 'postdoctoral' && ! $surname) {
+                $lastName = $lastName ?: 'Applicant';
+            }
+        }
 
         return \App\Models\Applicant::create([
             'user_id'     => $user->id,
-            'first_name'  => $parts[0] ?? $user->name,
-            'middle_name' => $parts[1] ?? null,
-            'last_name'   => $parts[2] ?? ($parts[1] ?? ''),
+            'first_name'  => $firstName,
+            'middle_name' => $middle,
+            'last_name'   => $lastName,
             'phone'       => $user->phone,
             'email'       => $user->email,
             'exam_index_number' => session('reg_index_number'),
+            'passport_number'   => session('reg_passport_number'),
             'entry_type'          => session('reg_entry_type'),
             'scholarship_category'=> session('reg_scholarship_category'),
             'application_type'    => session('reg_application_type'),

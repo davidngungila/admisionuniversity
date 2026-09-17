@@ -50,18 +50,61 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'entry_type'            => ['required', 'string', 'max:40'],
-            'scholarship_category'  => ['required', 'string', 'max:60'],
-            'application_type'      => ['required', 'string', 'max:40'],
-            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'index_number'          => ['required', 'string', 'max:40'],
-            'phone'                 => ['required', 'string', 'regex:/^\+?[0-9]{9,15}$/', 'max:30'],
-            'password'              => ['required', 'confirmed', Password::defaults()],
-        ]);
+        $category = $request->input('applicant_category', 'tanzanian');
+        if (! in_array($category, ['tanzanian','international','postdoctoral','post_doctoral'], true)) {
+            $category = 'tanzanian';
+        }
+        // Normalize post_doctoral alias
+        if ($category === 'post_doctoral') $category = 'postdoctoral';
 
-        // Use the index number as the initial display name (username); real names are completed in Personal Information.
-        $displayName = $validated['index_number'];
+        if ($category === 'tanzanian') {
+            $validated = $request->validate([
+                'applicant_category'    => ['required','string','in:tanzanian,international,postdoctoral'],
+                'entry_type'            => ['required', 'string', 'max:40'],
+                'application_type'      => ['required', 'string', 'max:40'],
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'index_number'          => ['required', 'string', 'max:40'],
+                'phone'                 => ['required', 'string', 'regex:/^\+?[0-9]{9,15}$/', 'max:30'],
+                'password'              => ['required', 'confirmed', Password::defaults()],
+            ]);
+            $displayName = $validated['index_number'];
+            $sessionData = [
+                'reg_applicant_category'  => 'tanzanian',
+                'reg_index_number'        => $validated['index_number'],
+                'reg_entry_type'          => $validated['entry_type'],
+                'reg_application_type'    => $validated['application_type'],
+                'reg_passport_number'     => null,
+                'reg_first_name'          => null,
+                'reg_surname'             => null,
+                'reg_scholarship_category'=> null,
+            ];
+            $successMsg = 'Account created. Your index number '.$validated['index_number'].' is your username. Choose an admission window below to start.';
+        } else {
+            // International / Post-Doctoral share the same form; category kept for display.
+            $validated = $request->validate([
+                'applicant_category'    => ['required','string','in:tanzanian,international,postdoctoral'],
+                'first_name'            => ['required','string','min:2','max:255'],
+                'surname'               => ['required','string','min:2','max:255'],
+                'passport_number'       => ['required','string','max:40','unique:applicants,passport_number'],
+                'scholarship_category'  => ['required', 'string', 'max:60'],
+                'application_type'      => ['required', 'string', 'max:40'],
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'phone'                 => ['required', 'string', 'regex:/^\+?[0-9]{9,15}$/', 'max:30'],
+                'password'              => ['required', 'confirmed', Password::defaults()],
+            ]);
+            $displayName = trim($validated['first_name'].' '.$validated['surname']);
+            $sessionData = [
+                'reg_applicant_category'  => $category,
+                'reg_first_name'          => $validated['first_name'],
+                'reg_surname'             => $validated['surname'],
+                'reg_passport_number'     => $validated['passport_number'],
+                'reg_scholarship_category'=> $validated['scholarship_category'],
+                'reg_application_type'    => $validated['application_type'],
+                'reg_index_number'        => null,
+                'reg_entry_type'          => null,
+            ];
+            $successMsg = 'Account created. Your passport number '.$validated['passport_number'].' is your username. Choose an admission window below to start.';
+        }
 
         $user = DB::transaction(function () use ($validated, $displayName) {
             $user = User::create([
@@ -84,15 +127,9 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        // Remember the Tanzanian registration choices for the first application.
-        session([
-            'reg_index_number'        => $validated['index_number'],
-            'reg_entry_type'          => $validated['entry_type'],
-            'reg_scholarship_category'=> $validated['scholarship_category'],
-            'reg_application_type'    => $validated['application_type'],
-        ]);
+        session($sessionData);
 
-        return redirect()->route('applicant.dashboard')->with('success', 'Account created. Your index number '.$validated['index_number'].' is your username. Choose an admission window below to start.');
+        return redirect()->route('applicant.dashboard')->with('success', $successMsg);
     }
 
     public function fetchName(Request $request)
