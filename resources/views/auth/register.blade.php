@@ -30,14 +30,13 @@
                             @error('entry_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('application_type') err @enderror">
-                            <label class="field-label">Application Type *</label>
+                            <label class="field-label" style="display:flex;align-items:center;gap:6px;">Application Type * <span class="info-icon" tabindex="0">i<span class="info-tip">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span></span></label>
                             <select name="application_type" required>
                                 <option value="">— Select level —</option>
                                 @foreach(($levels ?? []) as $lv)
                                     <option value="{{ $lv->id }}" @selected((string)old('application_type')===(string)$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
                                 @endforeach
                             </select>
-                            <span class="field-hint">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span>
                             @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('email') err @enderror">
@@ -47,9 +46,8 @@
                             @error('email')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('index_number') err @enderror">
-                            <label class="field-label">Index Number (Username): *</label>
+                            <label class="field-label" style="display:flex;align-items:center;gap:6px;">Index Number (Username): * <span class="info-icon" tabindex="0">i<span class="info-tip">e.g. S0001-0001-2015 or P0001-0001-2015 — used as your username to sign in.</span></span></label>
                             <input name="index_number" value="{{ old('index_number') }}" required placeholder="S0001-0001-2015 or P0001-0001-2015" style="font-family:'Consolas',monospace;letter-spacing:.02em;">
-                            <span class="field-hint">e.g. S0001-0001-2015 or P0001-0001-2015 — used as your username to sign in.</span>
                             @error('index_number')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('phone') err @enderror">
@@ -124,14 +122,13 @@
                             @error('scholarship_category')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('application_type') err @enderror">
-                            <label class="field-label">Application Type *</label>
+                            <label class="field-label" style="display:flex;align-items:center;gap:6px;">Application Type * <span class="info-icon" tabindex="0">i<span class="info-tip">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span></span></label>
                             <select name="application_type" required>
                                 <option value="">— Select level —</option>
                                 @foreach(($levels ?? []) as $lv)
                                     <option value="{{ $lv->id }}" @selected((string)old('application_type')===(string)$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
                                 @endforeach
                             </select>
-                            <span class="field-hint">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span>
                             @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('email') err @enderror">
@@ -340,6 +337,10 @@ document.getElementById('reg-form-pd')?.addEventListener('submit', function(e){ 
 .reg-tab{flex:1;padding:12px 16px;border:none;background:none;font-size:13px;font-weight:700;color:var(--ink-soft);cursor:pointer;text-align:center;border-bottom:3px solid transparent;transition:all .15s;font-family:inherit;}
 .reg-tab:hover{color:var(--coffee-900);background:#fff;}
 .reg-tab.active{color:var(--terracotta-600);border-bottom-color:var(--terracotta-600);background:#fff;}
+.info-icon{position:relative;display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--terracotta-100);color:var(--terracotta-600);border:1px solid var(--line);font-size:10px;font-weight:800;cursor:help;flex:none;}
+.info-icon .info-tip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:var(--coffee-900);color:#fff;padding:8px 10px;border-radius:8px;font-size:11px;line-height:1.4;white-space:normal;max-width:240px;width:max-content;box-shadow:0 4px 12px rgba(0,0,0,.15);display:none;z-index:10;text-align:left;font-weight:500;letter-spacing:0;}
+.info-icon .info-tip::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:var(--coffee-900) transparent transparent transparent;}
+.info-icon:hover .info-tip, .info-icon:focus .info-tip, .info-icon:focus-within .info-tip{display:block;}
 @media(max-width:900px){ .reg-grid{grid-template-columns:1fr !important;} .reg-tab{font-size:12px;padding:10px 8px;} }
 </style>
 @endsection
