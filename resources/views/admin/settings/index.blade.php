@@ -134,6 +134,13 @@
                             <span class="field-hint">e.g. MoCU — for logo mark & short display</span>
                         </div>
                     </div>
+                    @php $uniNameSwIdx = $settings->search(fn($s)=>$s->key==='university_name_sw'); $uniNameSwVal = $uniNameSwIdx !== false ? $settings[$uniNameSwIdx]->value : 'Chuo Kikuu Cha Dodoma'; @endphp
+                    <div class="field" style="margin-top:14px;">
+                        <label class="field-label">University Name (Swahili)</label>
+                        <input name="settings[{{ $uniNameSwIdx !== false ? $uniNameSwIdx : $settings->count() }}][key]" type="hidden" value="university_name_sw">
+                        <input name="settings[{{ $uniNameSwIdx !== false ? $uniNameSwIdx : $settings->count() }}][value]" value="{{ $uniNameSwVal }}" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;" placeholder="Chuo Kikuu Cha Dodoma">
+                        <span class="field-hint">Swahili name shown under the English name in admission letters, joining instructions, PDFs and headers — e.g. Chuo Kikuu cha Ushirika Moshi for MoCU.</span>
+                    </div>
                     <div class="field" style="margin-top:14px;">
                         <label class="field-label">University Logo — Upload New (PNG/JPG/SVG/WEBP, max 2MB)</label>
                         <input type="file" name="university_logo" accept="image/*" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;background:#fff;">

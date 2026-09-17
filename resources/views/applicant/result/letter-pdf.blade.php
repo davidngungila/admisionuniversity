@@ -32,7 +32,7 @@ body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.6; 
     <div class="logo">{{ substr(\App\Models\Setting::getValue('university_acronym','UDOM'),0,1) }}</div>
   @endif
   <div style="font-weight:800; font-size:14pt; margin-top:6px;">{{ strtoupper(\App\Models\Setting::getValue('university_name','University of Dodoma')) }}</div>
-  <div style="font-size:8pt; letter-spacing:1px; color:#6B5A48;">Chuo Kikuu Cha Dodoma</div>
+  <div style="font-size:8pt; letter-spacing:1px; color:#6B5A48;">{{ \App\Models\Setting::getValue('university_name_sw','Chuo Kikuu Cha Dodoma') }}</div>
   <div style="font-size:7.5pt; color:#6B5A48; margin-top:4px;">{{ \App\Models\Setting::getValue('contact_box','P.O. Box 259') }}, {{ \App\Models\Setting::getValue('contact_city','Dodoma, Tanzania') }} &middot; Tel: {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }} &middot; {{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}</div>
 </div>
 <div class="meta">

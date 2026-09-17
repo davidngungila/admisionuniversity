@@ -24,7 +24,7 @@
                 </div>
                 <div style="margin-top:10px;">
                     <div style="font-weight:800;font-size:18px;color:var(--coffee-900);letter-spacing:.04em;">{{ strtoupper(\App\Models\Setting::getValue('university_name','University of Dodoma')) }}</div>
-                    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;">Chuo Kikuu Cha Dodoma</div>
+                    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;">{{ \App\Models\Setting::getValue('university_name_sw','Chuo Kikuu Cha Dodoma') }}</div>
                 </div>
                 <div style="margin-top:10px;font-size:11px;color:var(--ink-soft);line-height:1.5;">{{ \App\Models\Setting::getValue('contact_box','P.O. Box 259') }}, {{ \App\Models\Setting::getValue('contact_city','Dodoma, Tanzania') }} · Tel: {{ \App\Models\Setting::getValue('admissions_phone','+255 26 231 0300') }} · Email: {{ \App\Models\Setting::getValue('admissions_email','admissions@university.ac.tz') }}<br>{{ \App\Models\Setting::getValue('admissions_office','Directorate of Undergraduate Studies') }} · Admissions Office</div>
             </div>
