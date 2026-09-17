@@ -66,7 +66,19 @@
 </div>
 
 <script>
-const smsLogsData = @json($logs->getCollection()->keyBy('id')->map(fn($l)=>['time'=>($l->sent_at?->format('d M Y H:i')??$l->created_at->format('d M Y H:i')),'template'=>$l->template,'recipient'=>$l->recipient,'subject'=>$l->subject,'status'=>$l->status,'body'=>$l->body]));
+@php
+$smsLogsMap = $logs->getCollection()->keyBy('id')->map(function($l){
+    return [
+        'time' => $l->sent_at ? $l->sent_at->format('d M Y H:i') : $l->created_at->format('d M Y H:i'),
+        'template' => $l->template,
+        'recipient' => $l->recipient,
+        'subject' => $l->subject,
+        'status' => $l->status,
+        'body' => $l->body,
+    ];
+})->toArray();
+@endphp
+const smsLogsData = @json($smsLogsMap);
 function viewSms(id){
     const d = smsLogsData[id];
     if(!d) return;
