@@ -177,27 +177,47 @@
                 <div class="panel-sub">Please fill in the required information to create your account</div>
             </div>
             <div style="padding:18px 24px 24px;">
+                <div style="margin-bottom:16px;padding:12px 16px;border-radius:10px;background:#fef3f2;border:1.5px solid #fecdca;color:#7a271a;font-size:12.5px;line-height:1.5;">
+                    <strong>Eligibility Requirement:</strong> Postdoc applicants must have completed their PhD within the last 5 years (graduated in or after 2021).
+                </div>
                 <form method="POST" action="{{ route('register') }}" id="reg-form-pd">
                     @csrf
                     <input type="hidden" name="applicant_category" value="postdoctoral">
                     <div class="reg-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
                         <div class="field @error('first_name') err @enderror">
                             <label class="field-label">First Name: *</label>
-                            <input name="first_name" value="{{ old('first_name') }}" required placeholder="e.g. Jane">
-                            <span class="field-hint">Please enter your first name</span>
+                            <input name="first_name" value="{{ old('first_name') }}" required placeholder="Enter your first name">
+                            <span class="field-hint">Enter your first name</span>
                             @error('first_name')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('surname') err @enderror">
-                            <label class="field-label">Surname: *</label>
-                            <input name="surname" value="{{ old('surname') }}" required placeholder="e.g. Smith">
-                            <span class="field-hint">Please enter your surname</span>
+                            <label class="field-label">Surname / Last Name: *</label>
+                            <input name="surname" value="{{ old('surname') }}" required placeholder="Enter your surname">
+                            <span class="field-hint">Enter your surname</span>
                             @error('surname')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
-                        <div class="field @error('passport_number') err @enderror">
-                            <label class="field-label">Passport Number (Username): *</label>
-                            <input name="passport_number" value="{{ old('passport_number') }}" required placeholder="e.g. AB1234567" style="font-family:'Consolas',monospace;">
-                            <span class="field-hint">Please enter your Passport Number</span>
-                            @error('passport_number')<span class="field-err">{{ $message }}</span>@enderror
+                        <div class="field @error('username') err @enderror">
+                            <label class="field-label">Username: *</label>
+                            <input name="username" value="{{ old('username') }}" required placeholder="Choose a username">
+                            <span class="field-hint">Used for signing into your account.</span>
+                            @error('username')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field @error('phd_graduation_year') err @enderror">
+                            <label class="field-label">PhD Graduation Year: *</label>
+                            <input name="phd_graduation_year" type="number" min="2021" max="{{ date('Y')+1 }}" value="{{ old('phd_graduation_year') }}" required placeholder="e.g. 2023">
+                            @error('phd_graduation_year')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field @error('email') err @enderror">
+                            <label class="field-label">Email Address: *</label>
+                            <input name="email" type="email" value="{{ old('email') }}" required placeholder="Enter a working email address">
+                            <span class="field-hint">Enter a working email address</span>
+                            @error('email')<span class="field-err">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="field @error('phone') err @enderror">
+                            <label class="field-label">Phone Number (e.g. +255 715000001): *</label>
+                            <input name="phone" value="{{ old('phone') }}" required placeholder="+255 715000001">
+                            <span class="field-hint">Used for communications and SMS updates.</span>
+                            @error('phone')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field @error('scholarship_category') err @enderror">
                             <label class="field-label">Scholarship Category *</label>
@@ -212,39 +232,16 @@
                             <span class="field-hint">Select No Scholarship if you are applying through the normal admission process.</span>
                             @error('scholarship_category')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
-                        <div class="field @error('application_type') err @enderror">
-                            <label class="field-label">Application Type *</label>
-                            <select name="application_type" required>
-                                <option value="">— Select level —</option>
-                                @foreach(($levels ?? []) as $lv)
-                                    <option value="{{ $lv->id }}" @selected((string)old('application_type')===(string)$lv->id)>{{ $lv->name }} @if($lv->short_name) ({{ $lv->short_name }}) @endif</option>
-                                @endforeach
-                            </select>
-                            <span class="field-hint">Certificate, Diploma, Bachelor, PGD, Masters &amp; PhD</span>
-                            @error('application_type')<span class="field-err">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="field @error('email') err @enderror">
-                            <label class="field-label">Email Address *</label>
-                            <input name="email" type="email" value="{{ old('email') }}" required placeholder="you@example.com">
-                            <span class="field-hint">Please enter your email address (Enter a Valid/Working Email )</span>
-                            @error('email')<span class="field-err">{{ $message }}</span>@enderror
-                        </div>
-                        <div class="field @error('phone') err @enderror">
-                            <label class="field-label">Phone Number *</label>
-                            <input name="phone" value="{{ old('phone') }}" required placeholder="+255 715000001">
-                            <span class="field-hint">Eg. +255 715000001<br>Your phone number is unique to our system</span>
-                            @error('phone')<span class="field-err">{{ $message }}</span>@enderror
-                        </div>
                         <div class="field @error('password') err @enderror">
-                            <label class="field-label">Password *</label>
-                            <input name="password" type="password" required placeholder="••••••••">
-                            <span class="field-hint">Please enter password</span>
+                            <label class="field-label">Password: *</label>
+                            <input name="password" type="password" required placeholder="Enter password">
+                            <span class="field-hint">Enter password</span>
                             @error('password')<span class="field-err">{{ $message }}</span>@enderror
                         </div>
                         <div class="field">
-                            <label class="field-label">Confirm Password *</label>
-                            <input name="password_confirmation" type="password" required placeholder="••••••••">
-                            <span class="field-hint">Please confirm password</span>
+                            <label class="field-label">Confirm Password: *</label>
+                            <input name="password_confirmation" type="password" required placeholder="Confirm password">
+                            <span class="field-hint">Confirm password</span>
                         </div>
                     </div>
                     <div style="margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line);">
@@ -312,9 +309,25 @@ function validateIntl(f){
     if(req(f.password) !== req(f.password_confirmation)) return regAlert('Passwords do not match.');
     return true;
 }
+function validatePd(f){
+    if(!req(f.first_name)) return regAlert('Please enter your first name.');
+    if(!req(f.surname)) return regAlert('Please enter your surname.');
+    if(!req(f.username)) return regAlert('Please choose a username.');
+    if(!req(f.phd_graduation_year)) return regAlert('Please enter your PhD graduation year.');
+    const yr = parseInt(req(f.phd_graduation_year),10);
+    if(isNaN(yr) || yr < 2021 || yr > (new Date().getFullYear()+1)) return regAlert('PhD graduation year must be 2021 or later (within the last 5 years).');
+    if(!req(f.email)) return regAlert('Please enter your email address.');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req(f.email))) return regAlert('Please enter a valid / working email address.');
+    if(!req(f.phone)) return regAlert('Please enter your phone number.');
+    if(!/^\+?[0-9]{9,15}$/.test(req(f.phone))) return regAlert('Please enter a valid phone number, e.g. +255715000001.');
+    if(!req(f.scholarship_category)) return regAlert('Please select your scholarship category.');
+    if(!req(f.password)) return regAlert('Please enter your password.');
+    if(req(f.password) !== req(f.password_confirmation)) return regAlert('Passwords do not match.');
+    return true;
+}
 document.getElementById('reg-form-tz')?.addEventListener('submit', function(e){ if(validateTz(e.target) !== true) e.preventDefault(); });
 document.getElementById('reg-form-intl')?.addEventListener('submit', function(e){ if(validateIntl(e.target) !== true) e.preventDefault(); });
-document.getElementById('reg-form-pd')?.addEventListener('submit', function(e){ if(validateIntl(e.target) !== true) e.preventDefault(); });
+document.getElementById('reg-form-pd')?.addEventListener('submit', function(e){ if(validatePd(e.target) !== true) e.preventDefault(); });
 
 // Re-open tab that has server validation errors
 (function(){

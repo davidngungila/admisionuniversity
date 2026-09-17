@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'email',
     'exam_index_number',
     'passport_number',
+    'username',
+    'phd_graduation_year',
     'entry_type',
     'scholarship_category',
     'application_type',

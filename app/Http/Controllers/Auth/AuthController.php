@@ -79,13 +79,14 @@ class AuthController extends Controller
                 'reg_entry_type'          => $validated['entry_type'],
                 'reg_application_type'    => $level?->name ?? $validated['application_type'],
                 'reg_passport_number'     => null,
+                'reg_username'            => null,
+                'reg_phd_graduation_year' => null,
                 'reg_first_name'          => null,
                 'reg_surname'             => null,
                 'reg_scholarship_category'=> null,
             ];
             $successMsg = 'Account created. Your index number '.$validated['index_number'].' is your username. Choose an admission window below to start'.($level ? ' for '.$level->name : '').'.';
-        } else {
-            // International / Post-Doctoral share the same form; category kept for display.
+        } elseif ($category === 'international') {
             $validated = $request->validate([
                 'applicant_category'    => ['required','string','in:tanzanian,international,postdoctoral'],
                 'first_name'            => ['required','string','min:2','max:255'],
@@ -102,16 +103,49 @@ class AuthController extends Controller
             $sessionData = [
                 'intended_level_id'       => $level?->id,
                 'intended_level_name'     => $level?->name,
-                'reg_applicant_category'  => $category,
+                'reg_applicant_category'  => 'international',
                 'reg_first_name'          => $validated['first_name'],
                 'reg_surname'             => $validated['surname'],
                 'reg_passport_number'     => $validated['passport_number'],
+                'reg_username'            => null,
+                'reg_phd_graduation_year' => null,
                 'reg_scholarship_category'=> $validated['scholarship_category'],
                 'reg_application_type'    => $level?->name ?? $validated['application_type'],
                 'reg_index_number'        => null,
                 'reg_entry_type'          => null,
             ];
             $successMsg = 'Account created. Your passport number '.$validated['passport_number'].' is your username. Choose an admission window below to start'.($level ? ' for '.$level->name : '').'.';
+        } else {
+            // Post-Doctoral
+            $validated = $request->validate([
+                'applicant_category'    => ['required','string','in:tanzanian,international,postdoctoral'],
+                'first_name'            => ['required','string','min:2','max:255'],
+                'surname'               => ['required','string','min:2','max:255'],
+                'username'              => ['required','string','min:3','max:40','unique:applicants,username','unique:users,name'],
+                'phd_graduation_year'   => ['required','integer','min:2021','max:'.(date('Y')+1)],
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'phone'                 => ['required', 'string', 'regex:/^\+?[0-9]{9,15}$/', 'max:30'],
+                'scholarship_category'  => ['required', 'string', 'max:60'],
+                'password'              => ['required', 'confirmed', Password::defaults()],
+            ]);
+            $displayName = trim($validated['username']);
+            $sessionData = [
+                'reg_applicant_category'  => 'postdoctoral',
+                'reg_first_name'          => $validated['first_name'],
+                'reg_surname'             => $validated['surname'],
+                'reg_username'            => $validated['username'],
+                'reg_phd_graduation_year' => $validated['phd_graduation_year'],
+                'reg_scholarship_category'=> $validated['scholarship_category'],
+                'reg_application_type'    => 'PhD',
+                'reg_passport_number'     => null,
+                'reg_index_number'        => null,
+                'reg_entry_type'          => null,
+            ];
+            // Postdoc level is always PhD
+            $phdLevel = \App\Models\AdmissionLevel::where('code','PHD')->first();
+            $sessionData['intended_level_id'] = $phdLevel?->id;
+            $sessionData['intended_level_name'] = $phdLevel?->name ?? 'PhD';
+            $successMsg = 'Account created. Your username '.$validated['username'].' is ready. Choose an admission window below to start for PhD.';
         }
 
         $user = DB::transaction(function () use ($validated, $displayName) {

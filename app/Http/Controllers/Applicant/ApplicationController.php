@@ -108,7 +108,6 @@ class ApplicationController extends Controller
             $firstName = $parts[0] ?? $user->name;
             $middle    = $parts[1] ?? null;
             $lastName  = $parts[2] ?? ($parts[1] ?? '');
-            // Post-Doctoral / International may have surname split differently
             if ($category === 'postdoctoral' && ! $surname) {
                 $lastName = $lastName ?: 'Applicant';
             }
@@ -123,6 +122,8 @@ class ApplicationController extends Controller
             'email'       => $user->email,
             'exam_index_number' => session('reg_index_number'),
             'passport_number'   => session('reg_passport_number'),
+            'username'          => session('reg_username'),
+            'phd_graduation_year'=> session('reg_phd_graduation_year'),
             'entry_type'          => session('reg_entry_type'),
             'scholarship_category'=> session('reg_scholarship_category'),
             'application_type'    => session('reg_application_type'),
