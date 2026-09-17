@@ -65,9 +65,9 @@ class StatusController extends Controller
 
         $application->load([
             'applicant.citizenship',
-            'applicant.currentAddress.region',
-            'applicant.currentAddress.district',
-            'applicant.currentAddress.ward',
+            'applicant.addresses.region',
+            'applicant.addresses.district',
+            'applicant.addresses.ward',
             'academicYear',
             'admissionWindow.admissionLevel',
             'admissionWindow.applicationRound',
