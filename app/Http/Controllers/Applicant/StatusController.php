@@ -7,6 +7,7 @@ use App\Models\Application;
 use App\Models\District;
 use App\Models\Region;
 use App\Models\Ward;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StatusController extends Controller
 {
@@ -56,6 +57,35 @@ class StatusController extends Controller
                 'documents',
             ]),
         ]);
+    }
+
+    public function form(Application $application)
+    {
+        $this->authorize($application);
+
+        $application->load([
+            'applicant.citizenship',
+            'applicant.currentAddress.region',
+            'applicant.currentAddress.district',
+            'applicant.currentAddress.ward',
+            'academicYear',
+            'admissionWindow.admissionLevel',
+            'admissionWindow.applicationRound',
+            'selectedProgrammes.programme.campus',
+            'selectedProgrammes.programme.department.faculty',
+            'payments',
+            'academicResults',
+            'documents',
+        ]);
+
+        if (request()->has('download')) {
+            $pdf = Pdf::loadView('applicant.application.form-pdf', compact('application'));
+            $pdf->setPaper('a4', 'portrait');
+            $filename = 'Application-Form-'.($application->application_number ?? 'DRAFT-'.$application->id).'.pdf';
+            return $pdf->download($filename);
+        }
+
+        return view('applicant.application.form', compact('application'));
     }
 
     public function programmesApplied(Application $application)

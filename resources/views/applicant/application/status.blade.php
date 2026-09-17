@@ -6,8 +6,10 @@
         <h1>Application Status</h1>
         <p class="page-sub">Application {{ $application->application_number ?? '— (generated on submit)' }} · {{ $application->admissionWindow->admissionLevel->name }} · Round {{ $application->admissionWindow->applicationRound->round_number }} · {{ $application->academicYear->name }}</p>
     </div>
-    <div class="page-actions">
-        <a href="{{ route('applicant.application.summary', encId($application->id)) }}" class="btn btn-primary btn-sm">View Summary</a>
+    <div class="page-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="{{ route('applicant.application.form', encId($application->id)) }}" class="btn btn-primary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Preview Application Form</a>
+        <a href="{{ route('applicant.application.form', encId($application->id)) }}?download=1" class="btn btn-ghost btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF</a>
+        <a href="{{ route('applicant.application.summary', encId($application->id)) }}" class="btn btn-ghost btn-sm">View Summary</a>
         <a href="{{ route('applicant.dashboard') }}" class="btn btn-ghost btn-sm">Back to Dashboard</a>
     </div>
 </div>

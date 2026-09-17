@@ -89,14 +89,18 @@
                 <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;">
                     @if(in_array($app->status, ['SELECTED','ADMITTED']))
                         <a href="{{ route('applicant.result.show', encId($app->id)) }}" class="btn btn-primary btn-sm" style="background:var(--acacia-600)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> View Admission Letter</a>
+                        <a href="{{ route('applicant.application.form', encId($app->id)) }}" class="btn btn-ghost btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Preview Application Form</a>
                         <a href="{{ route('applicant.application.status', encId($app->id)) }}" class="btn btn-ghost btn-sm">View Status</a>
                     @elseif(in_array($app->status, ['SUBMITTED','UNDER_REVIEW']))
-                        <a href="{{ route('applicant.application.status', encId($app->id)) }}" class="btn btn-primary btn-sm">View Status</a>
+                        <a href="{{ route('applicant.application.form', encId($app->id)) }}" class="btn btn-primary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Preview Application Form</a>
+                        <a href="{{ route('applicant.application.status', encId($app->id)) }}" class="btn btn-ghost btn-sm">View Status</a>
                         <a href="{{ route('applicant.result.show', encId($app->id)) }}" class="btn btn-ghost btn-sm">Track Progress</a>
                     @elseif($app->status === 'REJECTED')
+                        <a href="{{ route('applicant.application.form', encId($app->id)) }}" class="btn btn-ghost btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Preview Application Form</a>
                         <a href="{{ route('applicant.result.show', encId($app->id)) }}" class="btn btn-ghost btn-sm">View Result</a>
                     @else
                         <a href="{{ route('applicant.application.show', encId($app->id)) }}" class="btn btn-primary btn-sm">Continue Application</a>
+                        <a href="{{ route('applicant.application.form', encId($app->id)) }}" class="btn btn-ghost btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Preview Application Form</a>
                         <a href="{{ route('applicant.application.status', encId($app->id)) }}" class="btn btn-ghost btn-sm">View Status</a>
                     @endif
                 </div>

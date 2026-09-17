@@ -72,6 +72,7 @@ Route::get('/applications/{application}', [ApplicantApplication::class, 'show'])
     // Status / summary / history
     Route::get('/applications/{application}/status', [ApplicantStatus::class, 'show'])->name('application.status');
     Route::get('/applications/{application}/summary', [ApplicantStatus::class, 'summary'])->name('application.summary');
+    Route::get('/applications/{application}/form', [ApplicantStatus::class, 'form'])->name('application.form');
     Route::get('/history', [ApplicantHistory::class, 'index'])->name('history');
     Route::get('/calendar', [ApplicantCalendar::class, 'index'])->name('calendar');
 
