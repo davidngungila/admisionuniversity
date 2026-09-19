@@ -55,7 +55,7 @@ class ProgrammeController extends Controller
 
     public function show(Programme $programme)
     {
-        $programme->load(['department.faculty','campus','admissionLevel','requirements']);
+        $programme->load(['department.faculty','campus','admissionLevel','requirements','courses']);
         return view('admin.programmes.show', compact('programme'));
     }
 

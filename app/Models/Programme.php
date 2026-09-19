@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -59,11 +60,13 @@ class Programme extends Model
         return $this->hasMany(ProgrammeCourse::class)->orderBy('year')->orderBy('semester')->orderBy('course_code');
     }
 
-    public function curriculum(): \Illuminate\Support\Collection
+    protected function curriculum(): Attribute
     {
-        return $this->courses->groupBy('year')->map(function ($yCourses, $year) {
-            return $yCourses->groupBy('semester')->sortKeys();
-        })->sortKeys();
+        return Attribute::make(
+            get: fn () => $this->courses->groupBy('year')->map(function ($yCourses, $year) {
+                return $yCourses->groupBy('semester')->sortKeys();
+            })->sortKeys(),
+        )->withoutObjectCaching();
     }
 
     public function applicationProgrammes(): HasMany

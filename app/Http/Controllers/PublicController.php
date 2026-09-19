@@ -93,7 +93,7 @@ class PublicController extends Controller
             'courses',
         ]);
 
-        $curriculum = $programme->curriculum();
+        $curriculum = $programme->curriculum;
 
         return view('public.programmes.show', compact('programme', 'curriculum'));
     }
